@@ -13,10 +13,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Options
 option(SGL_BUILD_STATIC "Build SGL as a static library" ON)
 option(BUILD_EXAMPLES   "Build examples"                ON)
-# ------------------------------------------------------------------------------
 
-# ------------------------------------------------------------------------------
-# Directories
+set(BUILD_DIR "${CMAKE_BINARY_DIR}")
 # ------------------------------------------------------------------------------
 
 if(SGL_BUILD_STATIC)
@@ -26,31 +24,14 @@ if(SGL_BUILD_STATIC)
     # make funcitons ltaer to try functionality with
 
     # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     # Dependencies
 
-    #if(UNIX)
-    #    find_package(OpenGL REQUIRED)
-    #    find_package(X11 REQUIRED)
-    #    find_package(Threads REQUIRED)
-    #endif()
-
-    ## ------------------------------------------------------------
-    ## GLAD
-    #set(GLAD_DIR "${LIBS_DIR}/glad")
-    #set(GLAD_INCLUDE_DIR "${GLAD_DIR}/include")
-
-    #add_library(glad STATIC
-    #    "${GLAD_INCLUDE_DIR}/glad/glad.h"
-    #    "${GLAD_DIR}/src/glad.c"
-    #)
-    #target_include_directories(glad PUBLIC ${GLAD_INCLUDE_DIR})
-
-    #set(GLAD_LIBRARIES)
-    #if(UNIX)
-    #    set(GLAD_LIBRARIES glad ${CMAKE_DL_LIBS})
-    #else()
-    #    set(GLAD_LIBRARIES glad)
-    #endif()
+    if(UNIX)
+        find_package(OpenGL REQUIRED)
+        find_package(X11 REQUIRED)
+        find_package(Threads REQUIRED)
+    endif()
 
     # ------------------------------------------------------------
     # SPDLOG
@@ -60,6 +41,52 @@ if(SGL_BUILD_STATIC)
     # Creates spdlog.a in its source tree
     add_subdirectory(${SPDLOG_DIR})
 
+    # ------------------------------------------------------------
+    # GLAD
+    set(GLAD_DIR "${LIBS_DIR}/glad")
+    set(GLAD_INCLUDE_DIR "${GLAD_DIR}/include")
+
+    add_library(glad STATIC
+        "${GLAD_INCLUDE_DIR}/glad/glad.h"
+        "${GLAD_DIR}/src/glad.c"
+    )
+    target_include_directories(glad PUBLIC ${GLAD_INCLUDE_DIR})
+
+    set(GLAD_LIBRARIES)
+    if(UNIX)
+        set(GLAD_LIBRARIES glad ${CMAKE_DL_LIBS})
+    else()
+        set(GLAD_LIBRARIES glad)
+    endif()
+
+    # ------------------------------------------------------------
+    # GLFW3
+    set(GLFW_DIR "${LIBS_DIR}/glfw")
+    set(GLFW_INCLUDE_DIR "${GLFW_DIR}/include")
+    set(GLFW_BINARY_DIR "${BUILD_DIR}/glfw")
+
+    set(GLFW_BUILD_EXAMPLES OFF)
+    set(GLFW_BUILD_TESTS OFF)
+    set(GLFW_BUILD_DOCS OFF)
+    set(GLFW_INSTALL OFF)
+    option(GLFW_DOCUMENT_INTERNALS OFF)
+
+    set(GLFW_LIBRARIES 
+      ${GLFW_BINARY_DIR}/src/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX}
+    )
+
+    # Adds 'glfw' variable - the project name
+    add_subdirectory(${GLFW_DIR} ${GLFW_BINARY_DIR} EXCLUDE_FROM_ALL)
+
+    if(UNIX)
+        set(GLFW_LIBRARIES ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES} ${X11_LIBRARIES}
+                           ${X11_Xrandr_LIB} ${X11_Xcursor_LIB}
+                           ${X11_Xinerama_LIB} ${X11_Xxf86vm_LIB}
+                           ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS}
+        )
+    else()
+        # TODO Windows and others
+    endif()
 
     # --------------------------------------------------------------------------
 
@@ -67,26 +94,27 @@ if(SGL_BUILD_STATIC)
     set(SGL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/src")
 
     set(SGL_CORE_DIR "${SGL_DIR}/core")
-    set(SGL_APP_DIR "${SGL_DIR}/Application")
 
     set(SGL_SOURCES
         "${SGL_CORE_DIR}/Log.cpp" 
-        "${SGL_APP_DIR}/Application.cpp" 
+        "${SGL_CORE_DIR}/Window.cpp" 
+        "${SGL_CORE_DIR}/Application.cpp" 
         "${SGL_DIR}/SGL.cpp" 
     )
 
     add_library(${PROJECT_NAME} STATIC ${SGL_SOURCES})
     add_library(SGL::SGL ALIAS ${PROJECT_NAME})
 
-
     target_include_directories(${PROJECT_NAME}
-        PUBLIC ${SGL_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR}
+        PUBLIC ${SGL_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} 
+               ${GLFW_INCLUDE_DIR}
     )
 
     target_link_libraries(${PROJECT_NAME}
-        PRIVATE spdlog::spdlog
+        PRIVATE spdlog::spdlog 
+        PRIVATE ${GLAD_LIBRARIES}
+        PRIVATE ${GLFW_LIBRARIES}
     )
-
 
 endif()
 

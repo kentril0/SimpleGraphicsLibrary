@@ -1,21 +1,28 @@
 #include "SGL/SGL.h"
-#include "SGL/core/Log.h"
-#include "SGL/Application/Window.h"
 
 #include <memory>
+
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+
+#include "SGL/core/Log.h"
+#include "SGL/core/Assert.h"
+#include "SGL/core/Window.h"
 
 
 namespace sgl
 {
+    // -------------------------------------------------------------------------
+    // Function prototypes
+
     void InitLogging();
-    void InitGLFW();
-    void LoadGLFunctions();
+
+    // -------------------------------------------------------------------------
     
-    void Init(bool debugGL)
+    void Init()
     {
         InitLogging();
-        InitGLFW();
-        LoadGLFunctions();
     }
 
     void InitLogging()
@@ -24,21 +31,5 @@ namespace sgl
         SGL_FUNCTION();
     }
 
-    void InitGLFW()
-    {
-        SGL_FUNCTION();
-
-    }
-
-    void LoadGLFunctions()
-    {
-        SGL_FUNCTION();
-
-    }
-
-    std::unique_ptr<sgl::Window> CreateWindow()
-    {
-        return std::make_unique<sgl::Window>();
-    }
 
 } // namespace sgl

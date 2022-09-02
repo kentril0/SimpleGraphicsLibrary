@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SGL/core/Window.h"
+
 
 namespace sgl
 {
@@ -12,15 +14,14 @@ namespace sgl
         void Run();
     
     protected:
-        virtual void HandleInput() = 0;
         virtual void Update(float deltaTime) = 0;
         virtual void Render() = 0;
     
     protected:
-        static const int DEFAULT_WIN_WIDTH = 800;
-        static const int DEFAULT_WIN_HEIGHT = 600;
+        std::unique_ptr<Window> m_Window;
     
     private:
+        float m_LastFrameTime{ 0.0 };
     
     };
 

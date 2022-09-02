@@ -3,17 +3,18 @@
 
 #include <memory>
 
+#define SGL_DEBUG
+#define SGL_ENABLE_ASSERTS
+
+#include "SGL/core/Base.h"
 #include "SGL/core/Log.h"
-#include "SGL/Application/Window.h"
-#include "SGL/Application/Application.h"
+#include "SGL/core/Window.h"
+#include "SGL/core/Application.h"
 
 
 namespace sgl
 {
-    void Init(bool debugGL = false);
-
-    std::unique_ptr<sgl::Window> CreateWindow();
-    
+    void Init();
 
 
 } // namespace sgl
