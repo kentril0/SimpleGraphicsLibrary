@@ -6,6 +6,8 @@
 #define SGL_DEBUG
 #define SGL_ENABLE_ASSERTS
 
+#include <glad/glad.h>
+
 #include "SGL/core/Base.h"
 #include "SGL/core/Log.h"
 #include "SGL/core/Window.h"
