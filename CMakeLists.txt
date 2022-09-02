@@ -94,12 +94,14 @@ if(SGL_BUILD_STATIC)
     set(SGL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/src")
 
     set(SGL_CORE_DIR "${SGL_DIR}/core")
+    set(SGL_OPENGL_DIR "${SGL_DIR}/opengl")
 
     set(SGL_SOURCES
         "${SGL_CORE_DIR}/Log.cpp" 
         "${SGL_CORE_DIR}/Window.cpp" 
         "${SGL_CORE_DIR}/Application.cpp" 
-        "${SGL_DIR}/SGL.cpp" 
+        "${SGL_OPENGL_DIR}/VertexBuffer.cpp" 
+        "${SGL_DIR}/SGL.cpp"
     )
 
     add_library(${PROJECT_NAME} STATIC ${SGL_SOURCES})

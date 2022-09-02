@@ -38,8 +38,9 @@ void HelloTriangle::CreateVertexBuffers()
         -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, // right 
          0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f  // top   
     };
-        
-    m_VertexBuffer = sgl::CreateVertexBuffer(kVerticesColors);
+
+    m_VertexBuffer = sgl::VertexBuffer::Create(kVerticesColors.data(),
+                                               kVerticesColors.size());
 
     m_VertexBuffer->SetLayout(
         { sgl::ElementType::Float3, "Position" },

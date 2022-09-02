@@ -13,10 +13,13 @@
 #include "SGL/core/Window.h"
 #include "SGL/core/Application.h"
 
+#include "SGL/opengl/VertexBuffer.h"
+
 
 namespace sgl
 {
     void Init();
+
 
 
 } // namespace sgl
