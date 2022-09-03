@@ -42,15 +42,15 @@ void HelloTriangle::CreateVertexBuffers()
     m_VertexBuffer = sgl::VertexBuffer::Create(kVerticesColors.data(),
                                                kVerticesColors.size());
 
-    m_VertexBuffer->SetLayout(
+    m_VertexBuffer->SetLayout({
         { sgl::ElementType::Float3, "Position" },
         { sgl::ElementType::Float3, "Color" }
-    );
+    });
 }
 
 void HelloTriangle::CreateVertexArrays()
 {
-    m_VertexArray = sgl::CreateVertexArray();
+    m_VertexArray = sgl::VertexArray::Create();
 
     m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 }
