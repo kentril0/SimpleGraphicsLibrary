@@ -72,6 +72,12 @@ namespace sgl
         m_ID = 0;
     }
 
+    void VertexBuffer::SetLayout(const BufferLayout& layout)
+    {
+        SGL_FUNCTION();
+        m_Layout = layout;
+    }
+
     void VertexBuffer::Bind() const
     {
         SGL_FUNCTION();

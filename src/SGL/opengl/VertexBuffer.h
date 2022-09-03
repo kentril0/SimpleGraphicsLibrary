@@ -5,6 +5,8 @@
 #include <array>
 #include <vector>
 
+#include <SGL/opengl/BufferLayout.h>
+
 
 namespace sgl
 {
@@ -57,12 +59,18 @@ namespace sgl
 
         ~VertexBuffer();
 
+        /** @brief Specify the format of data in the buffer */
+        void SetLayout(const BufferLayout& layout);
+
         void Bind() const;
         static void UnBind();
 
         void UpdateData(const void* data,
                         uint32_t size,
                         int32_t offset = 0) const;
+        
+        uint32_t GetID() const { return m_ID; }
+        const BufferLayout& GetLayout() const { return m_Layout; }
 
     private:
         void CreateBuffer();
@@ -74,6 +82,7 @@ namespace sgl
 
     private:
         uint32_t m_ID{ 0 };
+        BufferLayout m_Layout;
     };
 
 } // namespace sgl

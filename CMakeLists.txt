@@ -100,6 +100,7 @@ if(SGL_BUILD_STATIC)
         "${SGL_CORE_DIR}/Log.cpp" 
         "${SGL_CORE_DIR}/Window.cpp" 
         "${SGL_CORE_DIR}/Application.cpp" 
+        "${SGL_OPENGL_DIR}/BufferLayout.cpp" 
         "${SGL_OPENGL_DIR}/VertexBuffer.cpp" 
         "${SGL_DIR}/SGL.cpp"
     )
