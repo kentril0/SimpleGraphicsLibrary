@@ -9,6 +9,7 @@ namespace sgl
     Application::Application()
     {
         SGL_FUNCTION();
+        m_Window = Window::Create( {"Application"} );
     }
 
     Application::~Application()
@@ -20,7 +21,9 @@ namespace sgl
     {
         SGL_FUNCTION();
 
-        m_Window = Window::Create( {"Hello Triangle"} );
+
+        // TODO
+        //OnInit();
 
         while ( m_Window->IsOpen() )
         {
