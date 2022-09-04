@@ -88,6 +88,12 @@ if(SGL_BUILD_STATIC)
         # TODO Windows and others
     endif()
 
+    # ------------------------------------------------------------
+    # GLM - header-only
+
+    set(GLM_DIR "${LIBS_DIR}/glm")
+    set(GLM_INCLUDE_DIR "${GLM_DIR}") 
+
     # --------------------------------------------------------------------------
 
     set(SGL_DIR "${CMAKE_SOURCE_DIR}/src/SGL")
@@ -103,6 +109,8 @@ if(SGL_BUILD_STATIC)
         "${SGL_OPENGL_DIR}/BufferLayout.cpp" 
         "${SGL_OPENGL_DIR}/VertexBuffer.cpp" 
         "${SGL_OPENGL_DIR}/VertexArray.cpp" 
+        "${SGL_OPENGL_DIR}/ShaderObject.cpp" 
+        "${SGL_OPENGL_DIR}/Shader.cpp" 
         "${SGL_DIR}/SGL.cpp"
     )
 
@@ -111,7 +119,7 @@ if(SGL_BUILD_STATIC)
 
     target_include_directories(${PROJECT_NAME}
         PUBLIC ${SGL_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} 
-               ${GLFW_INCLUDE_DIR}
+               ${GLFW_INCLUDE_DIR} ${GLM_INCLUDE_DIR}
     )
 
     target_link_libraries(${PROJECT_NAME}
