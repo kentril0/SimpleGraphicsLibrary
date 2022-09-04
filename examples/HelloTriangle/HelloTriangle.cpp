@@ -7,7 +7,6 @@ HelloTriangle::HelloTriangle()
     SGL_FUNCTION();
 
     InitializeRenderObjects();
-    SetupPreRenderStates();
 }
 
 HelloTriangle::~HelloTriangle()
@@ -19,15 +18,7 @@ void HelloTriangle::InitializeRenderObjects()
 {
     CreateVertexBuffers();
     CreateVertexArrays();
-    CreatePrograms();
-}
-
-void HelloTriangle::SetupPreRenderStates()
-{
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-    m_Shader->Use();
-    m_VertexArray->Bind();
+    CreateShaders();
 }
 
 void HelloTriangle::CreateVertexBuffers()
@@ -54,11 +45,10 @@ void HelloTriangle::CreateVertexBuffers()
 void HelloTriangle::CreateVertexArrays()
 {
     m_VertexArray = sgl::VertexArray::Create();
-
     m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 }
 
-void HelloTriangle::CreatePrograms()
+void HelloTriangle::CreateShaders()
 {
     const char* vertexShaderSrc = R"(
         #version 450 core
@@ -96,6 +86,19 @@ void HelloTriangle::CreatePrograms()
 }
 
 // =============================================================================
+
+void HelloTriangle::SetupPreRenderStates()
+{
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+    m_Shader->Use();
+    m_VertexArray->Bind();
+}
+
+void HelloTriangle::Start()
+{
+    SetupPreRenderStates();
+}
 
 void HelloTriangle::Update(float dt)
 {

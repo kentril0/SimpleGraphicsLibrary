@@ -9,7 +9,9 @@ namespace sgl
     Application::Application()
     {
         SGL_FUNCTION();
-        m_Window = Window::Create( {"Application"} );
+
+        // TODO can be hidden until "Run()"
+        m_Window = Window::Create();
     }
 
     Application::~Application()
@@ -21,9 +23,9 @@ namespace sgl
     {
         SGL_FUNCTION();
 
+        // TODO show window
 
-        // TODO
-        //OnInit();
+        Start();
 
         while ( m_Window->IsOpen() )
         {
@@ -39,7 +41,7 @@ namespace sgl
             m_Window->PollEvents();
         }
 
-        m_Window->DestroyWindow();
+        // TODO hide window
     }
 
 } // namespace sgl
