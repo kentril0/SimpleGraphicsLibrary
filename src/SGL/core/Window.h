@@ -41,18 +41,18 @@ namespace sgl
         operator GLFWwindow*() const { return m_Window; }
         GLFWwindow* GetGLFWWindow() const { return m_Window; }
 
-        bool IsOpen() const { return !glfwWindowShouldClose(m_Window); }
+        inline bool IsOpen() const { return !glfwWindowShouldClose(m_Window); }
 
         /**
          * @brief Swaps buffers to display the rendered frame
          */
-        void Display() const { glfwSwapBuffers(m_Window); }
+        inline void Display() const { glfwSwapBuffers(m_Window); }
 
         /**
          * @brief Processes pending events that have already been received, and
          *  returns immediately 
          */
-        void PollEvents() const { glfwPollEvents(); }
+        inline void PollEvents() const { glfwPollEvents(); }
 
         /**
          * @brief Destroys the window handle for it to be later created again
@@ -65,7 +65,7 @@ namespace sgl
         void SetVSync(bool enabled);
         bool IsVSync() const { return m_Data.VSync; }
 
-        // Set callbacks
+        // TODO Set callbacks
         
     
     private:
