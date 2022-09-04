@@ -3,8 +3,9 @@
 
 #include <memory>
 
-#define SGL_DEBUG
-#define SGL_ENABLE_ASSERTS
+// TODO moved to "core/Base.h"
+//#define SGL_DEBUG
+//#define SGL_ENABLE_ASSERTS
 
 #include <glad/glad.h>
 
@@ -17,6 +18,8 @@
 #include "SGL/opengl/VertexBuffer.h"
 #include "SGL/opengl/VertexArray.h"
 
+#include "SGL/opengl/ShaderObject.h"
+#include "SGL/opengl/Shader.h"
 
 namespace sgl
 {
