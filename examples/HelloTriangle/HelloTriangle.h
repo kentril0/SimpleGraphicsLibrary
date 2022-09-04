@@ -26,5 +26,5 @@ private:
     std::shared_ptr<sgl::VertexArray> m_VertexArray{ nullptr };
 
     // TODO Renamoe program to based on GL ref or for both vulkan
-    std::shared_ptr<sgl::Program> m_Program{ nullptr };
+    std::shared_ptr<sgl::Shader> m_Shader{ nullptr };
 };

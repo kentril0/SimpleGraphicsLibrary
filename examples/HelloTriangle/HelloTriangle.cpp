@@ -26,21 +26,24 @@ void HelloTriangle::SetupPreRenderStates()
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-    m_Program->Use();
+    m_Shader->Use();
     m_VertexArray->Bind();
 }
 
 void HelloTriangle::CreateVertexBuffers()
 {
-    const std::array kVerticesColors{
+    // TODO should be static??
+    static const std::array kVerticesColors{
         // Vertex            // Color
          0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // left  
         -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, // right 
          0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f  // top   
     };
 
-    m_VertexBuffer = sgl::VertexBuffer::Create(kVerticesColors.data(),
-                                               kVerticesColors.size());
+    m_VertexBuffer = sgl::VertexBuffer::Create(
+        kVerticesColors.data(),
+        kVerticesColors.size() * sizeof( decltype(kVerticesColors[0]) )
+    );
 
     m_VertexBuffer->SetLayout({
         { sgl::ElementType::Float3, "Position" },
@@ -79,17 +82,17 @@ void HelloTriangle::CreatePrograms()
         };
     )";
 
-    const auto vertShader = sgl::CreateShaderStage(
+    const auto vertShader = sgl::ShaderObject::Create(
         sgl::ShaderStage::Vertex,
         vertexShaderSrc
     );
 
-    const auto fragShader = sgl::CreateShaderStage(
+    const auto fragShader = sgl::ShaderObject::Create(
         sgl::ShaderStage::Fragment,
         fragmentShaderSrc
     );
 
-    m_Program = sgl::CreateProgram({ vertShader, fragShader });
+    m_Shader = sgl::Shader::Create({ vertShader, fragShader });
 }
 
 // =============================================================================
@@ -101,6 +104,7 @@ void HelloTriangle::Update(float dt)
 
 void HelloTriangle::Render()
 {
+    // TODO callback update framebuffer
     glViewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 
     glClear(GL_COLOR_BUFFER_BIT);
