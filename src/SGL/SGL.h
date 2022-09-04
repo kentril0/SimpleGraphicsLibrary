@@ -16,17 +16,18 @@
 #include "SGL/core/Application.h"
 
 #include "SGL/opengl/VertexBuffer.h"
+#include "SGL/opengl/IndexBuffer.h"
 #include "SGL/opengl/VertexArray.h"
 
 #include "SGL/opengl/ShaderObject.h"
 #include "SGL/opengl/Shader.h"
+
 
 namespace sgl
 {
     void Init();
 
 } // namespace sgl
-
 
 
 #endif // SGL_SGL_H_

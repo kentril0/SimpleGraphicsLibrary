@@ -108,6 +108,7 @@ if(SGL_BUILD_STATIC)
         "${SGL_CORE_DIR}/Application.cpp" 
         "${SGL_OPENGL_DIR}/BufferLayout.cpp" 
         "${SGL_OPENGL_DIR}/VertexBuffer.cpp" 
+        "${SGL_OPENGL_DIR}/IndexBuffer.cpp" 
         "${SGL_OPENGL_DIR}/VertexArray.cpp" 
         "${SGL_OPENGL_DIR}/ShaderObject.cpp" 
         "${SGL_OPENGL_DIR}/Shader.cpp" 
