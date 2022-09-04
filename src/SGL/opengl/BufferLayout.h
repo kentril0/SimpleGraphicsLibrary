@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <string>
 
 
 namespace sgl
@@ -98,12 +99,14 @@ namespace sgl
             //SGL_ASSERT_MSG(false, "Unknown buffer element data type: {}", type);
             return 0;        
         }
+
+        std::string ToString() const;
     };
 
     class BufferLayout
     {
     public:
-        BufferLayout() {}
+        BufferLayout();
         BufferLayout(const std::initializer_list<BufferElement>& elements);
         
         const std::vector<BufferElement>& GetElements() const {
@@ -125,6 +128,9 @@ namespace sgl
         std::vector<BufferElement>::const_iterator end() const {
             return m_Elements.end();
         }
+
+        void DebugPrint() const;
+
     private:
         void CalculateElementOffsets();
         void CalculateStride();
