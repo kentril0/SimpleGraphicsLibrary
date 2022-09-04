@@ -53,30 +53,20 @@ namespace sgl
         DeleteVertexArray();
     }
 
-    void VertexArray::CreateVertexArray()
-    {
-        SGL_FUNCTION();
-        glCreateVertexArrays(1, &m_ID);
-    }
-
-    void VertexArray::DeleteVertexArray()
-    {
-        SGL_FUNCTION();
-        glDeleteVertexArrays(1, &m_ID);
-        m_ID = 0;
-    }
-
     void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vbo,
                                       bool instanced)
     {
         SGL_FUNCTION();
-        const auto& layout = vbo->GetLayout();
+        SGL_ASSERT(m_ID > 0);
 
+        const auto& layout = vbo->GetLayout();
         const bool kVBOHasFormat = layout.GetElements().size() > 0;
         SGL_ASSERT(kVBOHasFormat);
 
         const uint32_t kPerInstance = 1, kPerVertex = 0;
         const uint32_t kDivisor = instanced ? kPerInstance : kPerVertex;
+
+        //this->Bind();
 
         for (const auto& e : layout)
         {
@@ -164,12 +154,27 @@ namespace sgl
                     break;
                 }
                 default:
-                    SGL_ASSERT_MSG(false, "Unknown buffer element data type: "
-                                          "{}", e.type);
+                    SGL_ASSERT_MSG(false, "Unknown buffer element data type");
             }
         }
 
         m_VertexBuffers.push_back(vbo);
+    }
+
+    void VertexArray::CreateVertexArray()
+    {
+        SGL_FUNCTION();
+
+        glCreateVertexArrays(1, &m_ID);
+        SGL_ASSERT(m_ID > 0);
+    }
+
+    void VertexArray::DeleteVertexArray()
+    {
+        SGL_FUNCTION();
+
+        glDeleteVertexArrays(1, &m_ID);
+        m_ID = 0;
     }
 
     void VertexArray::SpecifyVertexAttribute(const uint32_t kVboID,
@@ -203,6 +208,7 @@ namespace sgl
         glVertexArrayAttribBinding(m_ID, kAttribIndex, 
                                    m_BindingIndex);
 
+        //glVertexAttribDivisor(m_BindingIndex, kDivisor);
         glVertexArrayBindingDivisor(m_ID, m_BindingIndex, kDivisor);
 
         ++m_BindingIndex;
