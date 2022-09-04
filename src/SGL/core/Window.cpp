@@ -27,6 +27,7 @@ namespace sgl
         : m_Data(data)
     {
         SGL_FUNCTION();
+
         InitGLFW();
         CreateWindow();
 
@@ -51,6 +52,7 @@ namespace sgl
     Window::~Window()
     {
         SGL_FUNCTION();
+
         DestroyWindow();
         TerminateGLFW();
     }
@@ -58,6 +60,7 @@ namespace sgl
     void Window::DestroyWindow()
     {
         SGL_FUNCTION();
+
         if (m_Window == nullptr)
             return;
 
@@ -70,6 +73,7 @@ namespace sgl
     void Window::SetVSync(bool enabled)
     {
         SGL_FUNCTION();
+
         if (enabled)
             glfwSwapInterval(1);
         else
@@ -88,6 +92,7 @@ namespace sgl
     void Window::InitGLFW()
     {
         SGL_FUNCTION();
+
         if (s_WindowCount > 0)
             return;
 
@@ -112,6 +117,7 @@ namespace sgl
     void Window::LoadGL()
     {
         SGL_FUNCTION();
+
         int success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         SGL_ASSERT_MSG(success, "Could not load OpenGL using GLAD");
     }
