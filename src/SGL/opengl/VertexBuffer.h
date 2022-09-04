@@ -16,46 +16,46 @@ namespace sgl
         /**
          * @brief Creates a vertex buffer with undefined allocated data store,
          *  expects the data to be updated later
-         * @param size Reserved size in bytes
+         * @param size Reserved size in **bytes**
          * @param immutable If true, then the buffer store cannot be 
          *  re-allocated, and cannot be deallocated until deleted.
          *  The data may still be updated later, regardless of mutability.
          */
         static std::shared_ptr<VertexBuffer> Create(uint32_t size,
-                                                    bool immutable = false);
+                                                    bool immutable = true);
         /**
          * @brief Creates a vertex buffer with allocated pre-defined data,
          *  expects the data to be static
-         * @param size Size of the data in bytes
+         * @param size Size of the data in **bytes**
          * @param immutable If true, then the buffer store cannot be 
          *  re-allocated, and cannot be deallocated until deleted.
          *  The data may still be updated later, regardless of mutability.
          */
         static std::shared_ptr<VertexBuffer> Create(const void* data,
                                                     uint32_t size,
-                                                    bool immutable = false);
+                                                    bool immutable = true);
     public:
         /**
          * @brief Creates a vertex buffer with undefined allocated data store,
          *  expects the data to be updated later
-         * @param size Reserved size in bytes
+         * @param size Reserved size in **bytes**
          * @param immutable If true, then the buffer store cannot be 
          *  re-allocated, and cannot be deallocated until deleted.
          *  The data may still be updated later, regardless of mutability.
          */
         VertexBuffer(uint32_t size,
-                     bool immutable = false);
+                     bool immutable = true);
         /**
          * @brief Creates a vertex buffer with allocated pre-defined data,
          *  expects the data to be static
-         * @param size Size of the data in bytes
+         * @param size Size of the data in **bytes**
          * @param immutable If true, then the buffer store cannot be 
          *  re-allocated, and cannot be deallocated until deleted.
          *  The data may still be updated later, regardless of mutability.
          */
         VertexBuffer(const void* data,
                      uint32_t size,
-                     bool immutable = false);
+                     bool immutable = true);
 
         ~VertexBuffer();
 

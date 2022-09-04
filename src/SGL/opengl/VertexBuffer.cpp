@@ -4,7 +4,9 @@
 
 #include <glad/glad.h>
 
+#include <SGL/core/Base.h>
 #include <SGL/core/Log.h>
+#include <SGL/core/Assert.h>
 
 
 namespace sgl
@@ -34,6 +36,7 @@ namespace sgl
     VertexBuffer::VertexBuffer(const void* data, uint32_t size, bool immutable)
     {
         SGL_FUNCTION();
+
         CreateBuffer();
         AllocateData(data, size, immutable);
     }
@@ -41,13 +44,16 @@ namespace sgl
     VertexBuffer::~VertexBuffer()
     {
         SGL_FUNCTION();
+
         DeleteBuffer();
     }
 
     void VertexBuffer::CreateBuffer()
     {
         SGL_FUNCTION();
+
         glCreateBuffers(1, &m_ID);
+        SGL_ASSERT(m_ID > 0);
     }
 
     void VertexBuffer::AllocateData(const void* data, uint32_t size, 
@@ -75,7 +81,9 @@ namespace sgl
     void VertexBuffer::SetLayout(const BufferLayout& layout)
     {
         SGL_FUNCTION();
+
         m_Layout = layout;
+        m_Layout.DebugPrint();
     }
 
     void VertexBuffer::Bind() const
