@@ -85,8 +85,6 @@ void HelloTriangle::CreateShaders()
     m_Shader = sgl::Shader::Create({ vertShader, fragShader });
 }
 
-// =============================================================================
-
 void HelloTriangle::SetupPreRenderStates()
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -95,9 +93,23 @@ void HelloTriangle::SetupPreRenderStates()
     m_VertexArray->Bind();
 }
 
+void HelloTriangle::OnResize(GLFWwindow* window, int width, int height)
+{
+    // TODO better
+    sgl::WindowData* data = (sgl::WindowData*)glfwGetWindowUserPointer(window);
+    data->width = width;
+    data->height = height;
+    
+    glViewport(0, 0, width, height);
+}
+
+// =============================================================================
+
 void HelloTriangle::Start()
 {
     SetupPreRenderStates();
+
+    m_Window->SetWindowSizeCallback(HelloTriangle::OnResize);
 }
 
 void HelloTriangle::Update(float dt)
@@ -107,9 +119,6 @@ void HelloTriangle::Update(float dt)
 
 void HelloTriangle::Render()
 {
-    // TODO callback update framebuffer
-    glViewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
-
     glClear(GL_COLOR_BUFFER_BIT);
 
     // TODO sizeof(verticesColors) / (sizeof(float) * 6)

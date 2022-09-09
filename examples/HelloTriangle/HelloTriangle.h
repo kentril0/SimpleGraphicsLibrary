@@ -22,6 +22,9 @@ private:
 
     void SetupPreRenderStates();
 
+    // TODO better
+    static void OnResize(GLFWwindow* window, int width, int height);
+
 private:
     std::shared_ptr<sgl::VertexBuffer> m_VertexBuffer{ nullptr };
     std::shared_ptr<sgl::VertexArray> m_VertexArray{ nullptr };

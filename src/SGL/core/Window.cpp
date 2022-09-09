@@ -35,6 +35,9 @@ namespace sgl
 
         // TODO Load GL only once?
         LoadGL();
+
+        glfwSetWindowUserPointer(m_Window, &m_Data);
+        SetVSync(true);
     }
 
     void Window::CreateWindow()
@@ -70,6 +73,17 @@ namespace sgl
         --s_WindowCount;
     }
 
+    void Window::UpdateSize()
+    {
+        SGL_FUNCTION();
+
+        int width, height;
+        glfwGetFramebufferSize(m_Window, &width, &height);
+
+        m_Data.width = static_cast<uint32_t>(width);
+        m_Data.height = static_cast<uint32_t>(height);
+    }
+
     void Window::SetVSync(bool enabled)
     {
         SGL_FUNCTION();
@@ -82,11 +96,53 @@ namespace sgl
         m_Data.VSync = enabled;
     }
 
+    void Window::SetKeyCallback(GLFWkeyfun callback) const
+    {
+        SGL_FUNCTION();
+        glfwSetKeyCallback(m_Window, callback);
+    }
+
+    void Window::SetWindowSizeCallback(GLFWwindowsizefun callback) const
+    {
+        SGL_FUNCTION();
+        glfwSetWindowSizeCallback(m_Window, callback);
+    }
+
+    void Window::SetWindowCloseCallback(GLFWwindowclosefun callback) const
+    {
+        SGL_FUNCTION();
+        glfwSetWindowCloseCallback(m_Window, callback);
+    }
+
+    void Window::SetCharCallback(GLFWcharfun callback) const
+    {
+        SGL_FUNCTION();
+        glfwSetCharCallback(m_Window, callback);
+    }
+
+    void Window::SetMouseButtonCallback(GLFWmousebuttonfun callback) const
+    {
+        SGL_FUNCTION();
+        glfwSetMouseButtonCallback(m_Window, callback);
+    }
+
+    void Window::SetScrollCallback(GLFWscrollfun callback) const
+    {
+        SGL_FUNCTION();
+        glfwSetScrollCallback(m_Window, callback);
+    }
+
+    void Window::SetCursorPosCallback(GLFWcursorposfun callback) const
+    {
+        SGL_FUNCTION();
+        glfwSetCursorPosCallback(m_Window, callback);
+    }
+
     // =========================================================================
 
     static void GLFWErrorCallback(int error, const char* description)
     {
-        fprintf(stderr, "Error: %s\n", description);
+        SGL_LOG_ERR("GLFW Error {0}: {1}\n", error, description);
     }
 
     void Window::InitGLFW()

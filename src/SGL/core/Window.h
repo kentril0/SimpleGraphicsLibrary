@@ -59,14 +59,74 @@ namespace sgl
          */
         void DestroyWindow();
 
+        void UpdateSize();
+
         uint32_t GetWidth() const { return m_Data.width; }
         uint32_t GetHeight() const { return m_Data.height; }
 
         void SetVSync(bool enabled);
         bool IsVSync() const { return m_Data.VSync; }
 
-        // TODO Set callbacks
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, int key, int scancode, int action,
+         *             int mods)
+         * Called when a key is pressed, repeated or released.
+         */
+        void SetKeyCallback(GLFWkeyfun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, int width, int height)
+         * 
+         * Called when the window is resized
+         */
+        void SetWindowSizeCallback(GLFWwindowsizefun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window)
+         * 
+         * Called when the user attempts to close the window
+         */
+        void SetWindowCloseCallback(GLFWwindowclosefun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, unsigned int codepoint)
+         * 
+         * Called when a Unicode character is input
+         * Is keyboard layout dependent, characters do not map 1:1 to
+         *  physical keys,
+         */
+        void SetCharCallback(GLFWcharfun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, int button, int action, int mods)
+         * 
+         * Called when a mouse button is pressed or released.
+         */
+        void SetMouseButtonCallback(GLFWmousebuttonfun callback) const;
         
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, double xoffset, double yoffset)
+         * 
+         * Called when a scrolling device is used, such as a mouse wheel or
+         *  scrolling area of a touchpad.
+         */
+        void SetScrollCallback(GLFWscrollfun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, double xpos, double ypos)
+         * 
+         * Called when the cursor is moved. The callback is provided with the
+         *  position, in screen coordinates, relative to the upper-left corner
+         *  of the content area of the window.
+         */
+        void SetCursorPosCallback(GLFWcursorposfun callback) const;
     
     private:
         void CreateWindow();
