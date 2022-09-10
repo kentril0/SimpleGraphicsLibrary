@@ -1,2 +1,11 @@
 
 
+
+build/
+
+# Vim
+*.swp
+*.swo
+
+# Custom
+TODO.md
