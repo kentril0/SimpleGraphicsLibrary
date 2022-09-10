@@ -1,13 +1,20 @@
+# Copyright (c) 2022 SGL authors Distributed under MIT License 
+# (http://opensource.org/licenses/MIT)
 
 cmake_minimum_required(VERSION 3.16)
 
-set(SGL_VERSION "0.0")
+set(SGL_VERSION "0.1")
 
 project(SGL VERSION ${SGL_VERSION} )
-message(STATUS "Building SGL version: ${SGL_VERSION}")
+message(STATUS "<SGL> version: ${SGL_VERSION}")
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSGL_DEBUG -DSGL_ENABLE_ASSERTS")
 
 # ------------------------------------------------------------------------------
 # Options
@@ -32,6 +39,7 @@ if(SGL_BUILD_STATIC)
 
     # ------------------------------------------------------------
     # SPDLOG
+
     set(SPDLOG_DIR "${LIBS_DIR}/spdlog")
     set(SPDLOG_INCLUDE_DIR "${SPDLOG_DIR}/include")
 
@@ -40,6 +48,7 @@ if(SGL_BUILD_STATIC)
 
     # ------------------------------------------------------------
     # GLAD
+
     set(GLAD_DIR "${LIBS_DIR}/glad")
     set(GLAD_INCLUDE_DIR "${GLAD_DIR}/include")
 
@@ -58,6 +67,7 @@ if(SGL_BUILD_STATIC)
 
     # ------------------------------------------------------------
     # GLFW3
+
     set(GLFW_DIR "${LIBS_DIR}/glfw")
     set(GLFW_INCLUDE_DIR "${GLFW_DIR}/include")
     set(GLFW_BINARY_DIR "${BUILD_DIR}/glfw")
@@ -125,6 +135,10 @@ if(SGL_BUILD_STATIC)
         PRIVATE spdlog::spdlog 
         PRIVATE ${GLAD_LIBRARIES}
         PRIVATE ${GLFW_LIBRARIES}
+    )
+
+    target_precompile_headers(${PROJECT_NAME}
+        PRIVATE "${SGL_DIR}/pch.h"
     )
 
 endif()

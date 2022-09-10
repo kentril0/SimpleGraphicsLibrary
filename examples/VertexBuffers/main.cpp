@@ -1,4 +1,7 @@
-
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
 
 #include <SGL/SGL.h>
 #include "VertexBuffers.h"

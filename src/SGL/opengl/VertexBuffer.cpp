@@ -1,12 +1,10 @@
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
+
+#include "SGL/pch.h"
 #include <SGL/opengl/VertexBuffer.h>
-
-#include <memory>
-
-#include <glad/glad.h>
-
-#include <SGL/core/Base.h>
-#include <SGL/core/Log.h>
-#include <SGL/core/Assert.h>
 
 
 namespace sgl

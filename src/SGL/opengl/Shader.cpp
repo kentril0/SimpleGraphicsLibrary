@@ -1,14 +1,11 @@
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
+
+#include "SGL/pch.h"
 #include <SGL/opengl/Shader.h>
-
-#include <memory>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include <SGL/opengl/ShaderObject.h>
-#include <SGL/core/Log.h>
-#include <SGL/core/Assert.h>
 
 
 namespace sgl

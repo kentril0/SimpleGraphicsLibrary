@@ -1,3 +1,9 @@
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
+
+#include "SGL/pch.h"
 #include "SGL/core/Log.h"
 
 #include <spdlog/spdlog.h>

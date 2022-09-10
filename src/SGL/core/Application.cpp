@@ -1,7 +1,10 @@
-#include "SGL/core/Application.h"
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
 
-#include "SGL/core/Log.h"
-#include "SGL/core/Timestep.h"
+#include "SGL/pch.h"
+#include "SGL/core/Application.h"
 
 
 namespace sgl

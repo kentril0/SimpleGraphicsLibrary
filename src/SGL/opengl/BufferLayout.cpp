@@ -1,11 +1,12 @@
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
+
+#include "SGL/pch.h"
 #include <SGL/opengl/BufferLayout.h>
 
-#include <cstdint>
 #include <sstream>
-
-#include <SGL/core/Base.h>
-#include <SGL/core/Log.h>
-#include <SGL/core/Assert.h>
 
 #define FLOAT_BYTES (sizeof(float))
 #define INT32_BYTES (sizeof(int32_t))

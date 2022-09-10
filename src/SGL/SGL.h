@@ -1,11 +1,12 @@
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
+
 #ifndef SGL_SGL_H_
 #define SGL_SGL_H_
 
 #include <memory>
-
-// TODO moved to "core/Base.h"
-//#define SGL_DEBUG
-//#define SGL_ENABLE_ASSERTS
 
 #include <glad/glad.h>
 
