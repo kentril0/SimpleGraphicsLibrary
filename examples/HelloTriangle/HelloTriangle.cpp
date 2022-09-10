@@ -23,17 +23,9 @@ void HelloTriangle::InitializeRenderObjects()
 
 void HelloTriangle::CreateVertexBuffers()
 {
-    // TODO should be static??
-    static const std::array kVerticesColors{
-        // Vertex            // Color
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // left  
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, // right 
-         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f  // top   
-    };
-
     m_VertexBuffer = sgl::VertexBuffer::Create(
-        kVerticesColors.data(),
-        kVerticesColors.size() * sizeof( decltype(kVerticesColors[0]) )
+        s_kVerticesColors.data(),
+        s_kVerticesColors.size() * sizeof( decltype(s_kVerticesColors[0]) )
     );
 
     m_VertexBuffer->SetLayout({
@@ -121,7 +113,9 @@ void HelloTriangle::Render()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // TODO sizeof(verticesColors) / (sizeof(float) * 6)
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-}
+    // sizeof(verticesColors) / (sizeof(float) * 6)
+    const uint32_t kAttribCount = 2 * 3;
+    const uint32_t kVertexCount = s_kVerticesColors.size() / kAttribCount;
 
+    glDrawArrays(GL_TRIANGLES, 0, kVertexCount);
+}
