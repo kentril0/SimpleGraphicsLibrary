@@ -2,7 +2,7 @@
 Simple Graphics Library (SGL)
 =============================
 
-A simple library for learning and experimenting with APIs written in C++.
+A simple library for learning and experimenting with Graphics APIs, written in C++.
 For now, supports only OpenGL 4.5.
 
 ## Features:
