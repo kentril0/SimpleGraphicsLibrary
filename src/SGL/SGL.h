@@ -3,22 +3,31 @@
 
 #include <memory>
 
-#define SGL_DEBUG
-#define SGL_ENABLE_ASSERTS
+// TODO moved to "core/Base.h"
+//#define SGL_DEBUG
+//#define SGL_ENABLE_ASSERTS
+
+#include <glad/glad.h>
 
 #include "SGL/core/Base.h"
 #include "SGL/core/Log.h"
+#include "SGL/core/Assert.h"
 #include "SGL/core/Window.h"
 #include "SGL/core/Application.h"
+
+#include "SGL/opengl/VertexBuffer.h"
+#include "SGL/opengl/IndexBuffer.h"
+#include "SGL/opengl/VertexArray.h"
+
+#include "SGL/opengl/ShaderObject.h"
+#include "SGL/opengl/Shader.h"
 
 
 namespace sgl
 {
     void Init();
 
-
 } // namespace sgl
-
 
 
 #endif // SGL_SGL_H_

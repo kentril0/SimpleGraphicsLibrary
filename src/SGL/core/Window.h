@@ -34,6 +34,13 @@ namespace sgl
     public: 
         static std::unique_ptr<Window> Create(
             const WindowData& data = WindowData());
+
+        /** 
+         * @return Ref to WindowData saved as a user data ptr in the window handle
+         * @pre Window must exist
+         */
+        static WindowData& GetUserData(GLFWwindow* w);
+
     public:
         Window(const WindowData& data = WindowData());
         ~Window();
@@ -41,23 +48,25 @@ namespace sgl
         operator GLFWwindow*() const { return m_Window; }
         GLFWwindow* GetGLFWWindow() const { return m_Window; }
 
-        bool IsOpen() const { return !glfwWindowShouldClose(m_Window); }
+        inline bool IsOpen() const { return !glfwWindowShouldClose(m_Window); }
 
         /**
          * @brief Swaps buffers to display the rendered frame
          */
-        void Display() const { glfwSwapBuffers(m_Window); }
+        inline void Display() const { glfwSwapBuffers(m_Window); }
 
         /**
          * @brief Processes pending events that have already been received, and
          *  returns immediately 
          */
-        void PollEvents() const { glfwPollEvents(); }
+        inline void PollEvents() const { glfwPollEvents(); }
 
         /**
          * @brief Destroys the window handle for it to be later created again
          */
         void DestroyWindow();
+
+        void UpdateSize();
 
         uint32_t GetWidth() const { return m_Data.width; }
         uint32_t GetHeight() const { return m_Data.height; }
@@ -65,8 +74,68 @@ namespace sgl
         void SetVSync(bool enabled);
         bool IsVSync() const { return m_Data.VSync; }
 
-        // Set callbacks
+        // Callbacks
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, int key, int scancode, int action,
+         *             int mods)
+         * Called when a key is pressed, repeated or released.
+         */
+        void SetKeyCallback(GLFWkeyfun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, int width, int height)
+         * 
+         * Called when the window is resized
+         */
+        void SetWindowSizeCallback(GLFWwindowsizefun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window)
+         * 
+         * Called when the user attempts to close the window
+         */
+        void SetWindowCloseCallback(GLFWwindowclosefun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, unsigned int codepoint)
+         * 
+         * Called when a Unicode character is input
+         * Is keyboard layout dependent, characters do not map 1:1 to
+         *  physical keys,
+         */
+        void SetCharCallback(GLFWcharfun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, int button, int action, int mods)
+         * 
+         * Called when a mouse button is pressed or released.
+         */
+        void SetMouseButtonCallback(GLFWmousebuttonfun callback) const;
         
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, double xoffset, double yoffset)
+         * 
+         * Called when a scrolling device is used, such as a mouse wheel or
+         *  scrolling area of a touchpad.
+         */
+        void SetScrollCallback(GLFWscrollfun callback) const;
+
+        /**
+         * @param callback Function of signature:
+         *  void fname(GLFWwindow* window, double xpos, double ypos)
+         * 
+         * Called when the cursor is moved. The callback is provided with the
+         *  position, in screen coordinates, relative to the upper-left corner
+         *  of the content area of the window.
+         */
+        void SetCursorPosCallback(GLFWcursorposfun callback) const;
     
     private:
         void CreateWindow();
