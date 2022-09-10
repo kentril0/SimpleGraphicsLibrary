@@ -15,8 +15,10 @@ namespace sgl
         Int, Int2, Int3, Int4,
         UInt, UInt2, UInt3,
         Float, Float2, Float3, Float4,
-        Mat3, Mat4
+        Mat3, Mat4,
     };
+
+    const char* ElementTypeToString(ElementType type);
 
     static constexpr auto FLOAT_BYTES = sizeof(float);
     static constexpr auto INT32_BYTES = sizeof(int32_t);
@@ -27,25 +29,25 @@ namespace sgl
         ElementType type;
         uint32_t size;
         int32_t offset;
+        int32_t relOffset;
         bool normalized;
 
         BufferElement() = default;
 
         /** 
-         * @param desc Only used as a self-description
-         * @param offset 
+         * @param type Type of the element as an attribute.
+         * @param desc Used only as a note to yourself.
+         * @param offset Starting byte of the element in the buffer.
+         * @param relativeOffset Starting byte inside a structure the element is
+         *  part of.
          * @param normalized If true, will be converted to floating-point to
          *  [0,1] for unsigned or [-1,1] for signed types.
          */
-        BufferElement(ElementType type, 
-                      const char* desc, 
+        BufferElement(ElementType type,
+                      const char* desc,
                       int32_t offset = 0,
-                      bool normalized = false)
-          : type(type), size(ElementTypeSize()), offset(offset),
-            normalized(normalized)
-        { 
-            (void)desc;
-        }
+                      int32_t relativeOffset = 0,
+                      bool normalized = false);
 
         constexpr uint32_t ElementTypeSize() const
         {

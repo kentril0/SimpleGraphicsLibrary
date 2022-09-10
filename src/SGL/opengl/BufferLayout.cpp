@@ -14,6 +14,18 @@
 
 namespace sgl
 {
+    BufferElement::BufferElement(ElementType type, const char* desc,
+                                 int32_t offset, int32_t relativeOffset,
+                                 bool normalized)
+        : type(type), 
+          size(ElementTypeSize()),
+          offset(offset),
+          relOffset(relativeOffset),
+          normalized(normalized)
+    { 
+        (void)desc;
+    }
+
     BufferLayout::BufferLayout()
     {
         SGL_FUNCTION();
@@ -25,8 +37,8 @@ namespace sgl
     {
         SGL_FUNCTION();
 
+        CalculateStride();  // must be called before offsets are computed
         CalculateElementOffsets();
-        CalculateStride();
     }
 
     void BufferLayout::CalculateElementOffsets()
@@ -36,8 +48,22 @@ namespace sgl
         int64_t offset = 0;
         for (auto& element : m_Elements)
         {
-            element.offset = offset;
-            offset += element.size;
+            if (element.offset == 0)
+            {
+                if (element.relOffset == 0)
+                {
+                    element.offset = offset;
+                    offset += element.size;
+                }
+                else    // Part of the same 'structure', different relOffset
+                {
+                    offset += element.size;
+                }
+            }
+            else    // Possibly deinterleaved buffer
+            {
+                offset = element.offset + element.size;
+            }
         }
     } 
 
@@ -45,14 +71,20 @@ namespace sgl
     {
         SGL_FUNCTION();
 
+        uint32_t i = 0;
         m_Stride = 0;
         for (auto& element : m_Elements)
         {
+            // Is deinterleaved
+            if (i > 0 && element.offset != 0)
+                break;
+
             m_Stride += element.size;
+            ++i;
         }
     }
 
-    static const char* ElementTypeToString(ElementType type)
+    const char* ElementTypeToString(ElementType type)
     {
         switch(type)
         {
@@ -84,6 +116,7 @@ namespace sgl
         ss << "Type: " << ElementTypeToString(type)
            << ", Size: " << size
            << ", Offset: " << offset
+           << ", RelOffset: " << relOffset
            << ", Normalized: " << normalized;
         return ss.str();
     }
@@ -91,12 +124,13 @@ namespace sgl
     void BufferLayout::DebugPrint() const
     {
     #ifdef SGL_DEBUG
-        SGL_LOG_INFO("BufferLayout info:");
+        SGL_LOG_INFO("BufferLayout info:\n Elements total: {}, Stride {}",
+                     m_Elements.size(), m_Stride);
 
         uint32_t ctr = 0;
         for (const auto& e : m_Elements)
         {
-            SGL_LOG_INFO("Element {}: {}", ctr++, e.ToString());
+            SGL_LOG_INFO(" Element {}: {}", ctr++, e.ToString());
         }
     #endif
     }
