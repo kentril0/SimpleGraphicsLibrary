@@ -34,6 +34,13 @@ namespace sgl
     public: 
         static std::unique_ptr<Window> Create(
             const WindowData& data = WindowData());
+
+        /** 
+         * @return Ref to WindowData saved as a user data ptr in the window handle
+         * @pre Window must exist
+         */
+        static WindowData& GetUserData(GLFWwindow* w);
+
     public:
         Window(const WindowData& data = WindowData());
         ~Window();
@@ -66,6 +73,8 @@ namespace sgl
 
         void SetVSync(bool enabled);
         bool IsVSync() const { return m_Data.VSync; }
+
+        // Callbacks
 
         /**
          * @param callback Function of signature:

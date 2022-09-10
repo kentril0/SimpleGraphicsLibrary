@@ -87,10 +87,9 @@ void HelloTriangle::SetupPreRenderStates()
 
 void HelloTriangle::OnResize(GLFWwindow* window, int width, int height)
 {
-    // TODO better
-    sgl::WindowData* data = (sgl::WindowData*)glfwGetWindowUserPointer(window);
-    data->width = width;
-    data->height = height;
+    sgl::WindowData& data = sgl::Window::GetUserData(window);
+    data.width = width;
+    data.height = height;
     
     glViewport(0, 0, width, height);
 }

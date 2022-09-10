@@ -21,6 +21,11 @@ namespace sgl
         return std::make_unique<Window>(data);
     }
 
+    WindowData& Window::GetUserData(GLFWwindow* w)
+    {
+        return *(sgl::WindowData*)glfwGetWindowUserPointer(w);
+    }
+
     // =========================================================================
 
     Window::Window(const WindowData& data)
@@ -37,6 +42,7 @@ namespace sgl
         LoadGL();
 
         glfwSetWindowUserPointer(m_Window, &m_Data);
+
         SetVSync(true);
     }
 
