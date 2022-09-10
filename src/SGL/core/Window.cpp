@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
+
 #include "SGL/core/Window.h"
 
 #include <memory>
@@ -165,7 +170,11 @@ namespace sgl
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, SGL_GL_MAJOR_VERSION);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, SGL_GL_MINOR_VERSION);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    #ifdef SGL_DEBUG
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+    #endif
     }
 
     void Window::TerminateGLFW()
@@ -176,12 +185,37 @@ namespace sgl
             glfwTerminate();
     }
 
+#ifdef SGL_DEBUG
+    static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id,
+                                       GLenum severity, GLsizei length, 
+                                       const char *message,
+                                       const void *user_parameter)
+    {
+        switch(type)
+        {
+            case GL_DEBUG_TYPE_ERROR:
+            case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+                SGL_LOG_ERR("{}", message);
+                return;
+            default:
+                return;
+        }
+    }
+#endif  // SGL_DEBUG
+
     void Window::LoadGL()
     {
         SGL_FUNCTION();
 
         int success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         SGL_ASSERT_MSG(success, "Could not load OpenGL using GLAD");
+
+    #ifdef SGL_DEBUG
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback(DebugCallback, nullptr);
+        SGL_LOG_INFO("Enabled OpenGL Debug context");
+    #endif
     }
 
 } // namespace sgl

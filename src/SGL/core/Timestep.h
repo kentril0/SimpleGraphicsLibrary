@@ -1,3 +1,8 @@
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
+
 #ifndef SGL_CORE_TIMESTEP_H_
 #define SGL_CORE_TIMESTEP_H_
 

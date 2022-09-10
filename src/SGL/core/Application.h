@@ -1,4 +1,10 @@
-#pragma once
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
+
+#ifndef SGL_CORE_APPLICATION_H_
+#define SGL_CORE_APPLICATION_H_
 
 #include "SGL/core/Window.h"
 
@@ -37,3 +43,5 @@ namespace sgl
     };
 
 } // namespace sgl
+
+#endif // SGL_CORE_APPLICATION_H_
