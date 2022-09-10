@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 set(SGL_VERSION "0.0")
 
 project(SGL VERSION ${SGL_VERSION} )
-message(STATUS "Building SGL version ${SGL_VERSION}")
+message(STATUS "Building SGL version: ${SGL_VERSION}")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -19,9 +19,6 @@ set(BUILD_DIR "${CMAKE_BINARY_DIR}")
 
 if(SGL_BUILD_STATIC)
     set(LIBS_DIR "${CMAKE_SOURCE_DIR}/libs")
-
-    # TODO INTO FUNCTIONS
-    # make funcitons ltaer to try functionality with
 
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -94,6 +91,7 @@ if(SGL_BUILD_STATIC)
     set(GLM_DIR "${LIBS_DIR}/glm")
     set(GLM_INCLUDE_DIR "${GLM_DIR}") 
 
+    # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
 
     set(SGL_DIR "${CMAKE_SOURCE_DIR}/src/SGL")
