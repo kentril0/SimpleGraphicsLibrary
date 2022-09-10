@@ -1,7 +1,7 @@
 
 
 #include <SGL/SGL.h>
-#include "HelloTriangle/HelloTriangle.h"
+#include "HelloTriangle.h"
 
 
 int main()
