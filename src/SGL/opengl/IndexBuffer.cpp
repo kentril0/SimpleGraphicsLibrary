@@ -3,11 +3,8 @@
  * (http://opensource.org/licenses/MIT)
  */
 
+#include "SGL/pch.h"
 #include <SGL/opengl/IndexBuffer.h>
-
-#include <glad/glad.h>
-
-#include <SGL/core/Log.h>
 
 
 namespace sgl

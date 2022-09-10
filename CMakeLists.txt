@@ -137,6 +137,10 @@ if(SGL_BUILD_STATIC)
         PRIVATE ${GLFW_LIBRARIES}
     )
 
+    target_precompile_headers(${PROJECT_NAME}
+        PRIVATE "${SGL_DIR}/pch.h"
+    )
+
 endif()
 
 if(BUILD_EXAMPLES)

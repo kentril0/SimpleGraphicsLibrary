@@ -3,10 +3,8 @@
  * (http://opensource.org/licenses/MIT)
  */
 
+#include "SGL/pch.h"
 #include "SGL/core/Application.h"
-
-#include "SGL/core/Log.h"
-#include "SGL/core/Timestep.h"
 
 
 namespace sgl

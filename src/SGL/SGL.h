@@ -8,10 +8,6 @@
 
 #include <memory>
 
-// TODO moved to "core/Base.h"
-//#define SGL_DEBUG
-//#define SGL_ENABLE_ASSERTS
-
 #include <glad/glad.h>
 
 #include "SGL/core/Base.h"

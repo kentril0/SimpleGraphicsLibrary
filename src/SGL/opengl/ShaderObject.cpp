@@ -3,13 +3,8 @@
  * (http://opensource.org/licenses/MIT)
  */
 
+#include "SGL/pch.h"
 #include <SGL/opengl/ShaderObject.h>
-
-#include <glad/glad.h>
-
-#include <SGL/core/Log.h>
-#include <SGL/core/Assert.h>
-#include <SGL/core/Timer.h>
 
 
 namespace sgl
