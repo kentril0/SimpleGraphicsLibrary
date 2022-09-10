@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 
+#include <SGL/core/Base.h>
 #include <SGL/core/Log.h>
 #include <SGL/core/Assert.h>
 #include <SGL/opengl/VertexBuffer.h>
@@ -32,7 +33,8 @@ namespace sgl
             case ElementType::UInt3:     return GL_UNSIGNED_INT;
             case ElementType::Bool:      return GL_BYTE;
         }
-        SGL_ASSERT_MSG(false, "Unknown buffer element data type: {}", type);
+        SGL_ASSERT_MSG(false, "Unknown buffer element data type: {}", 
+                       ElementTypeToString(type));
         return 0;
     }
 
@@ -83,7 +85,7 @@ namespace sgl
                 case ElementType::Bool:
                 {
                     SpecifyVertexAttribute(vbo->GetID(), layout.GetStride(), e,
-                                           kDivisor);
+                                           kDivisor, e.relOffset);
                 /*
                     // Attach a vertex attribute of the VBO to an attrib index
                     const int32_t kFirstElementOffset = 0;
@@ -224,13 +226,11 @@ namespace sgl
 
     void VertexArray::Bind() const
     {
-        SGL_FUNCTION();
         glBindVertexArray(m_ID);
     }
 
     void VertexArray::UnBind()
     {
-        SGL_FUNCTION();
         glBindVertexArray(0);
     }
 

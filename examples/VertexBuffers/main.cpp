@@ -1,14 +1,14 @@
 
 
 #include <SGL/SGL.h>
-#include "HelloTriangle/HelloTriangle.h"
+#include "VertexBuffers.h"
 
 
 int main()
 {
     sgl::Init();
 
-    auto app = HelloTriangle();
+    auto app = VertexBuffers();
     app.Run();
 
     return 0;
