@@ -94,7 +94,8 @@ namespace sgl
             SGL_LOG_INFO("Compilation took: {} ms", compileTime.ElapsedMillis());
         }
 
-        CheckCompilationErrors();
+        const int kSuccess = CheckCompilationErrors();
+        SGL_ASSERT(kSuccess == GL_TRUE);
     }
 
     void ShaderObject::DeleteShader()
@@ -105,7 +106,7 @@ namespace sgl
         m_ID = 0;
     }
 
-    void ShaderObject::CheckCompilationErrors() const
+    int ShaderObject::CheckCompilationErrors() const
     {
         SGL_FUNCTION();
 
@@ -121,6 +122,8 @@ namespace sgl
                     log,
                     "---------------------------------------------------");
         }
+
+        return success;
     }
 
 } // namespace sgl
