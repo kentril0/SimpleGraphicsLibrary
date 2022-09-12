@@ -99,13 +99,13 @@ if(SGL_BUILD_STATIC)
     # GLM - header-only
 
     set(GLM_DIR "${LIBS_DIR}/glm")
-    set(GLM_INCLUDE_DIR "${GLM_DIR}") 
+    set(GLM_INCLUDE_DIR "${LIBS_DIR}") 
 
     # ------------------------------------------------------------
     # STB image - header-only
 
     set(STB_DIR "${LIBS_DIR}/stb")
-    set(STB_INCLUDE_DIR "${STB_DIR}")
+    set(STB_INCLUDE_DIR "${LIBS_DIR}")
 
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -118,6 +118,7 @@ if(SGL_BUILD_STATIC)
 
     set(SGL_SOURCES
         "${SGL_CORE_DIR}/Log.cpp" 
+        "${SGL_CORE_DIR}/Utils.cpp" 
         "${SGL_CORE_DIR}/Window.cpp" 
         "${SGL_CORE_DIR}/Application.cpp" 
         "${SGL_OPENGL_DIR}/BufferLayout.cpp" 

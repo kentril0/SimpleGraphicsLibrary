@@ -13,6 +13,7 @@
 #include "SGL/core/Base.h"
 #include "SGL/core/Log.h"
 #include "SGL/core/Assert.h"
+#include "SGL/core/Utils.h"
 #include "SGL/core/Window.h"
 #include "SGL/core/Application.h"
 
