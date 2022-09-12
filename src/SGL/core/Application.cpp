@@ -28,6 +28,8 @@ namespace sgl
 
         // TODO show window
 
+        m_StartTimer.Start();
+
         Start();
 
         while ( m_Window->IsOpen() )
