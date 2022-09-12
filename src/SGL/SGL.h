@@ -24,6 +24,8 @@
 #include "SGL/opengl/ShaderObject.h"
 #include "SGL/opengl/Shader.h"
 
+#include "SGL/opengl/Texture2D.h"
+
 
 namespace sgl
 {

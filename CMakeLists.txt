@@ -127,6 +127,7 @@ if(SGL_BUILD_STATIC)
         "${SGL_OPENGL_DIR}/VertexArray.cpp" 
         "${SGL_OPENGL_DIR}/ShaderObject.cpp" 
         "${SGL_OPENGL_DIR}/Shader.cpp" 
+        "${SGL_OPENGL_DIR}/Texture2D.cpp" 
         "${SGL_DIR}/SGL.cpp"
     )
 
