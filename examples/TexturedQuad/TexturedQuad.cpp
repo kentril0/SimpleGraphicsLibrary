@@ -21,28 +21,101 @@ TexturedQuad::~TexturedQuad()
 void TexturedQuad::InitializeRenderObjects()
 {
     CreateVertexBuffers();
+    CreateIndexBuffer();
     CreateVertexArrays();
     CreateShaders();
 }
 
 void TexturedQuad::CreateVertexBuffers()
 {
-    
+    m_VertexBuffer = sgl::VertexBuffer::Create(
+        s_kVertices.data(),
+        s_kVertices.size() * sizeof( decltype(s_kVertices[0]) )
+    );
+
+    m_VertexBuffer->SetLayout({
+        { sgl::ElementType::Float2, "Position" },
+        { sgl::ElementType::Float3, "Color",
+          0, // offset
+          offsetof(TexturedQuad::Vertex, color) // relativeOffset
+        },
+        { sgl::ElementType::Float2, "TexCoord",
+          0, // offset
+          offsetof(TexturedQuad::Vertex, texCoord) // relativeOffset
+        },
+    });
+}
+
+void TexturedQuad::CreateIndexBuffer()
+{
+    m_IndexBuffer = sgl::IndexBuffer::Create(indices.data(), indices.size());
 }
 
 void TexturedQuad::CreateVertexArrays()
 {
-    
+    m_VertexArray = sgl::VertexArray::Create();
+
+    m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+    m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 }
 
 void TexturedQuad::CreateShaders()
 {
-    
+    const char* vertexShaderSrc = R"(
+        #version 450 core
+        layout(location = 0) in vec2 inPosition;
+        layout(location = 1) in vec3 inColor;
+        layout(location = 2) in vec2 inTexCoord;
+
+        layout(location = 0) out vec3 fragColor;
+        layout(location = 1) out vec2 fragTexCoord;
+
+        uniform mat4 model;
+
+        void main()
+        {
+            gl_Position = model * vec4(inPosition, 0.0, 1.0);
+            fragColor = inColor;
+            fragTexCoord = inTexCoord;
+        };
+    )";
+
+    const char* fragmentShaderSrc = R"(
+        #version 450 core
+        layout(location = 0) in vec3 fragColor;
+        layout(location = 1) in vec2 fragTexCoord;
+
+        layout(location = 0) out vec4 outColor;
+
+        void main()
+        {
+            outColor = vec4(fragTexCoord, 0.0, 1.0);
+        };
+    )";
+
+    const auto vertShader = sgl::ShaderObject::Create(
+        sgl::ShaderStage::Vertex,
+        vertexShaderSrc
+    );
+
+    const auto fragShader = sgl::ShaderObject::Create(
+        sgl::ShaderStage::Fragment,
+        fragmentShaderSrc
+    );
+
+    m_Shader = sgl::Shader::Create({ vertShader, fragShader });
 }
 
 void TexturedQuad::SetupPreRenderStates()
 {
-    
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+    m_Shader->Use();
+
+    glm::mat4 model(1.0);
+    m_Shader->SetMat4("model", model);
+
+    m_VertexArray->Bind();
 }
 
 void TexturedQuad::OnResize(GLFWwindow* window, int width, int height)
@@ -70,5 +143,9 @@ void TexturedQuad::Update(float dt)
 
 void TexturedQuad::Render()
 {
-    
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glDrawElements(GL_TRIANGLES,
+                   m_IndexBuffer->GetIndicesCount(),
+                   m_IndexBuffer->GetIndexType(), 0);
 }

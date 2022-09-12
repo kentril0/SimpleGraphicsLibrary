@@ -22,6 +22,7 @@ private:
     void InitializeRenderObjects();
 
     void CreateVertexBuffers();
+    void CreateIndexBuffer();
     void CreateVertexArrays();
     void CreateShaders();
 
@@ -46,11 +47,13 @@ private:
         Vertex{{-0.5f,  0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}, // top left
     };
 
-    static constexpr std::array<uint16_t, 6> indices{
+    static constexpr std::array<uint32_t, 6> indices{
         0, 1, 2, 2, 3, 0
     };
 
     std::shared_ptr<sgl::VertexBuffer> m_VertexBuffer{ nullptr };
+    std::shared_ptr<sgl::IndexBuffer> m_IndexBuffer{ nullptr };
+
     std::shared_ptr<sgl::VertexArray> m_VertexArray{ nullptr };
 
     std::shared_ptr<sgl::Shader> m_Shader{ nullptr };
