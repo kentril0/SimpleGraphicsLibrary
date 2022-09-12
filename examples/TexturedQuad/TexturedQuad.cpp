@@ -4,6 +4,7 @@
  */
 
 #include "TexturedQuad.h"
+#include <glm/gtx/string_cast.hpp>
 
 
 TexturedQuad::TexturedQuad()
@@ -24,6 +25,7 @@ void TexturedQuad::InitializeRenderObjects()
     CreateIndexBuffer();
     CreateVertexArrays();
     CreateShaders();
+    CreateTextures();
 }
 
 void TexturedQuad::CreateVertexBuffers()
@@ -87,9 +89,11 @@ void TexturedQuad::CreateShaders()
 
         layout(location = 0) out vec4 outColor;
 
+        layout(binding = 1) uniform sampler2D texSampler;
+
         void main()
         {
-            outColor = vec4(fragTexCoord, 0.0, 1.0);
+            outColor = vec4(texture(texSampler, fragTexCoord).rgb, 1.0);
         };
     )";
 
@@ -106,16 +110,35 @@ void TexturedQuad::CreateShaders()
     m_Shader = sgl::Shader::Create({ vertShader, fragShader });
 }
 
+void TexturedQuad::CreateTextures()
+{
+    int width, height, components;
+    const int kForceRGBA = 4;
+    auto data = sgl::LoadImage(s_kTextureName, width, height, components,
+                               kForceRGBA);
+
+    SGL_ASSERT_MSG(data, "Texture loaded: {}", bool(data));
+
+    // TODO format based on component count and type
+    m_Texture = sgl::Texture2D::Create(width, height, data,
+                                       GL_RGBA8, GL_RGBA, true);
+}
+
 void TexturedQuad::SetupPreRenderStates()
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     m_Shader->Use();
 
-    glm::mat4 model(1.0);
-    m_Shader->SetMat4("model", model);
+    SGL_LOG_INFO("Model:\n{}\n{}\n{}", 
+                 glm::to_string(m_Model[0]),
+                 glm::to_string(m_Model[1]),
+                 glm::to_string(m_Model[2])
+    );
+    m_Shader->SetMat4("model", m_Model);
 
     m_VertexArray->Bind();
+    m_Texture->BindUnit(1);
 }
 
 void TexturedQuad::OnResize(GLFWwindow* window, int width, int height)
@@ -138,12 +161,18 @@ void TexturedQuad::Start()
 
 void TexturedQuad::Update(float dt)
 {
+    static const glm::vec3 kZ_axis(0.0, 0.0, 1.0);
 
+    const float kAngle = 30.0f * dt;
+
+    m_Model = glm::rotate(m_Model, glm::radians(kAngle), kZ_axis);
 }
 
 void TexturedQuad::Render()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    m_Shader->SetMat4("model", m_Model);
 
     glDrawElements(GL_TRIANGLES,
                    m_IndexBuffer->GetIndicesCount(),

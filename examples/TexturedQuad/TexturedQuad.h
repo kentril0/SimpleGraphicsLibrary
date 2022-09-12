@@ -19,12 +19,14 @@ protected:
     virtual void Render() override;
 
 private:
+    void LoadTextures();
     void InitializeRenderObjects();
 
     void CreateVertexBuffers();
     void CreateIndexBuffer();
     void CreateVertexArrays();
     void CreateShaders();
+    void CreateTextures();
 
     void SetupPreRenderStates();
 
@@ -57,4 +59,10 @@ private:
     std::shared_ptr<sgl::VertexArray> m_VertexArray{ nullptr };
 
     std::shared_ptr<sgl::Shader> m_Shader{ nullptr };
+
+    glm::mat4 m_Model{ 1.0 };
+
+    static inline const char* s_kTextureName = "textures/texture.jpg";
+    std::shared_ptr<sgl::Texture2D> m_Texture{ nullptr };
+
 };
