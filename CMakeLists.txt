@@ -101,6 +101,12 @@ if(SGL_BUILD_STATIC)
     set(GLM_DIR "${LIBS_DIR}/glm")
     set(GLM_INCLUDE_DIR "${GLM_DIR}") 
 
+    # ------------------------------------------------------------
+    # STB image - header-only
+
+    set(STB_DIR "${LIBS_DIR}/stb")
+    set(STB_INCLUDE_DIR "${STB_DIR}")
+
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
 
@@ -128,7 +134,7 @@ if(SGL_BUILD_STATIC)
 
     target_include_directories(${PROJECT_NAME}
         PUBLIC ${SGL_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} 
-               ${GLFW_INCLUDE_DIR} ${GLM_INCLUDE_DIR}
+               ${GLFW_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${STB_INCLUDE_DIR}
     )
 
     target_link_libraries(${PROJECT_NAME}
