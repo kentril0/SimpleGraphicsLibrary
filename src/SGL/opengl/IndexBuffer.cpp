@@ -9,6 +9,14 @@
 
 namespace sgl
 {
+    std::shared_ptr<IndexBuffer> IndexBuffer::Create(const uint32_t* indices,
+                                                     uint32_t indicesCount)
+    {
+        return std::make_shared<IndexBuffer>(indices, indicesCount);
+    }
+
+    // =========================================================================
+
     IndexBuffer::IndexBuffer(const uint32_t* indices, uint32_t indicesCount)
         : m_IndicesCount(indicesCount)
     {
@@ -38,6 +46,11 @@ namespace sgl
     {
         SGL_FUNCTION();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    uint32_t IndexBuffer::GetIndexType() const
+    {
+        return GL_UNSIGNED_INT;
     }
 
 } // namespace sgl

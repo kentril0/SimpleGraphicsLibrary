@@ -6,6 +6,7 @@
 #ifndef SGL_OPENGL_INDEX_BUFFER_H_
 #define SGL_OPENGL_INDEX_BUFFER_H_
 
+#include <memory>
 #include <cstdint>
 
 
@@ -15,6 +16,9 @@ namespace sgl
     class IndexBuffer
     {
     public:
+        static std::shared_ptr<IndexBuffer> Create(const uint32_t* indices,
+                                                   uint32_t indicesCount);
+    public:
         IndexBuffer(const uint32_t* indices,
                     uint32_t indicesCount);
         ~IndexBuffer();
@@ -23,7 +27,12 @@ namespace sgl
         static void UnBind();
 
         uint32_t GetID() const { return m_ID; };
-        uint32_t GetIndicesCount() const { return m_IndicesCount; };
+        inline uint32_t GetIndicesCount() const { return m_IndicesCount; };
+
+        /**
+         * @return Type of the indices in GL_enum equivalent value
+         */
+        uint32_t GetIndexType() const;
 
     private:
         uint32_t m_ID{ 0 };
