@@ -12,9 +12,17 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
 endif()
 
+# ------------------------------------------------------------------------------
+# Language Settings
+
+# TODO set only when in develop
+set(SGL_DEVELOP true)
+
+set(SGL_FLAGS_DEBUG "-DSGL_DEBUG -DSGL_ENABLE_ASSERTS")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSGL_DEBUG -DSGL_ENABLE_ASSERTS")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${SGL_FLAGS_DEBUG}")
 
 # ------------------------------------------------------------------------------
 # Options
@@ -145,9 +153,16 @@ if(SGL_BUILD_STATIC)
         PRIVATE ${GLFW_LIBRARIES}
     )
 
-    target_precompile_headers(${PROJECT_NAME}
-        PRIVATE "${SGL_DIR}/pch.h"
-    )
+    target_precompile_headers( ${PROJECT_NAME} PRIVATE "${SGL_DIR}/pch.h" )
+
+    #####################
+    # TODO Develop only #
+    if(SGL_DEVELOP)
+        set_target_properties( ${PROJECT_NAME} PROPERTIES
+            COMPILE_FLAGS "${SGL_FLAGS_DEBUG}"
+        )
+    endif()
+    #^^^^^^^^^^^^^^^^^^^^
 
 endif()
 
