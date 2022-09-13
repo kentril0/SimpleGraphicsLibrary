@@ -36,7 +36,6 @@ namespace sgl
     Texture2D::Texture2D()
     {
         SGL_FUNCTION();
-
         CreateTexture();
     }
 
@@ -95,6 +94,20 @@ namespace sgl
         ApplyFiltering();
     }
 
+    void Texture2D::CreateTexture()
+    {
+        SGL_FUNCTION();
+        glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
+        SGL_ASSERT(m_ID > 0);
+    }
+
+    void Texture2D::DeleteTexture()
+    {
+        SGL_FUNCTION();
+        glDeleteTextures(1, &m_ID);
+        m_ID = 0;
+    }
+
     void Texture2D::Init(uint32_t width, uint32_t height, uint32_t format,
                          uint32_t imageFormat, bool mipmaps)
     {
@@ -122,18 +135,19 @@ namespace sgl
         }
     }
 
-    void Texture2D::CreateTexture()
+    void Texture2D::SetDataImmutable(const unsigned char* data) const
     {
         SGL_FUNCTION();
-        glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
-        SGL_ASSERT(m_ID > 0);
-    }
 
-    void Texture2D::DeleteTexture()
-    {
-        SGL_FUNCTION();
-        glDeleteTextures(1, &m_ID);
-        m_ID = 0;
+        // Specify IMMUTABLE storage for all levels of a 2D array texture
+        glTextureStorage2D(m_ID,
+                           // number of texture levels
+                           m_MipLevels,
+                           // sized format of stored data *RGBA8
+                           m_Format,
+                           // in texels
+                           m_Width, m_Height);
+        UpdateData(data);
     }
 
     void Texture2D::UpdateData(const unsigned char* data) const
@@ -153,21 +167,6 @@ namespace sgl
                             // A pointer to the image data in memory
                             data);
 
-    }
-
-    void Texture2D::SetDataImmutable(const unsigned char* data) const
-    {
-        SGL_FUNCTION();
-
-        // Specify IMMUTABLE storage for all levels of a 2D array texture
-        glTextureStorage2D(m_ID,
-                           // number of texture levels
-                           m_MipLevels,
-                           // sized format of stored data *RGBA8
-                           m_Format,   
-                           // in texels
-                           m_Width, m_Height);
-        UpdateData(data);
     }
 
     void Texture2D::GenMipMaps()

@@ -28,7 +28,7 @@ namespace sgl
     public:
         Texture2D();
 
-        /** @brief Immutable */
+        /** @brief Immutable data storage */
         Texture2D(uint32_t width,
                   uint32_t height,
                   const unsigned char* data,
@@ -44,7 +44,7 @@ namespace sgl
         static void UnBind();
         static void UnBindUnit(uint32_t unit);
 
-        /** @brief Immutable */
+        /** @brief Immutable data storage */
         void SetImage(uint32_t width,
                       uint32_t height,
                       const unsigned char* data,
