@@ -64,5 +64,4 @@ private:
 
     static inline const char* s_kTextureName = "textures/texture.jpg";
     std::shared_ptr<sgl::Texture2D> m_Texture{ nullptr };
-
 };
