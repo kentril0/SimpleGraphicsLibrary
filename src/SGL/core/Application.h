@@ -7,6 +7,7 @@
 #define SGL_CORE_APPLICATION_H_
 
 #include "SGL/core/Window.h"
+#include "SGL/core/Timer.h"
 
 
 namespace sgl
@@ -37,9 +38,10 @@ namespace sgl
         // TODO statically shared among more apps?
         std::unique_ptr<Window> m_Window;
     
+        Timer m_StartTimer;    ///< Time elapsed after "Start()"
+
     private:
         float m_LastFrameTime{ 0.0 };
-    
     };
 
 } // namespace sgl

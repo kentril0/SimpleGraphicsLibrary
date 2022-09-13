@@ -99,7 +99,7 @@ TODO shader library
 
         void LinkProgram() const;
 
-        void CheckLinkErrors() const;
+        int CheckLinkErrors() const;
 
     private:
         uint32_t m_ID{ 0 };

@@ -26,6 +26,9 @@ namespace sgl
             m_Start = std::chrono::high_resolution_clock::now();
         }
 
+        /** @return Time elapsed in seconds */
+        inline operator float() const { return Elapsed(); }
+
         inline float ElapsedMillis() const
         {
             return std::chrono::duration_cast<std::chrono::milliseconds>

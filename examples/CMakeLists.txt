@@ -7,3 +7,4 @@ project(SGL_examples CXX)
 # TODO add here directories of examples
 add_subdirectory(HelloTriangle/ ${CMAKE_SOURCE_DIR}/build/HelloTriangle)
 add_subdirectory(VertexBuffers/ ${CMAKE_SOURCE_DIR}/build/VertexBuffers)
+add_subdirectory(TexturedQuad/ ${CMAKE_SOURCE_DIR}/build/TexturedQuad)

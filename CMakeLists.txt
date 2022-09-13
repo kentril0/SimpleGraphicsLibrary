@@ -99,7 +99,13 @@ if(SGL_BUILD_STATIC)
     # GLM - header-only
 
     set(GLM_DIR "${LIBS_DIR}/glm")
-    set(GLM_INCLUDE_DIR "${GLM_DIR}") 
+    set(GLM_INCLUDE_DIR "${LIBS_DIR}") 
+
+    # ------------------------------------------------------------
+    # STB image - header-only
+
+    set(STB_DIR "${LIBS_DIR}/stb")
+    set(STB_INCLUDE_DIR "${LIBS_DIR}")
 
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -112,6 +118,7 @@ if(SGL_BUILD_STATIC)
 
     set(SGL_SOURCES
         "${SGL_CORE_DIR}/Log.cpp" 
+        "${SGL_CORE_DIR}/Utils.cpp" 
         "${SGL_CORE_DIR}/Window.cpp" 
         "${SGL_CORE_DIR}/Application.cpp" 
         "${SGL_OPENGL_DIR}/BufferLayout.cpp" 
@@ -120,6 +127,7 @@ if(SGL_BUILD_STATIC)
         "${SGL_OPENGL_DIR}/VertexArray.cpp" 
         "${SGL_OPENGL_DIR}/ShaderObject.cpp" 
         "${SGL_OPENGL_DIR}/Shader.cpp" 
+        "${SGL_OPENGL_DIR}/Texture2D.cpp" 
         "${SGL_DIR}/SGL.cpp"
     )
 
@@ -128,7 +136,7 @@ if(SGL_BUILD_STATIC)
 
     target_include_directories(${PROJECT_NAME}
         PUBLIC ${SGL_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} 
-               ${GLFW_INCLUDE_DIR} ${GLM_INCLUDE_DIR}
+               ${GLFW_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${STB_INCLUDE_DIR}
     )
 
     target_link_libraries(${PROJECT_NAME}
