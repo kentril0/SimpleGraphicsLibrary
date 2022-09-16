@@ -112,15 +112,13 @@ void TexturedQuad::CreateShaders()
 
 void TexturedQuad::CreateTextures()
 {
-    int width, height, components;
     const int kForceRGBA = 4;
-    auto data = sgl::LoadImage(s_kTextureName, width, height, components,
-                               kForceRGBA);
+    auto data = sgl::LoadImage(s_kTextureName, kForceRGBA);
 
     SGL_ASSERT_MSG(data, "Texture loaded: {}", bool(data));
 
     // TODO format based on component count and type
-    m_Texture = sgl::Texture2D::Create(width, height, data,
+    m_Texture = sgl::Texture2D::Create(data.width, data.height, data.data,
                                        GL_RGBA8, GL_RGBA, true);
 }
 

@@ -29,11 +29,17 @@ namespace sgl
     void FreeImageData(unsigned char* data);
 
     /** @brief Abstraction for data loaded using STBI library, 
-     *  frees memory out of scope. */
+     *  frees memory out of scope.
+     */
     struct STBData
     {
+        int width;
+        int height;
+        int channels;
         unsigned char* data;
-        STBData(unsigned char* p);
+
+        STBData() : STBData(0, 0, 0, NULL) {}
+        STBData(int w, int h, int ch, unsigned char* p);
         ~STBData();
 
         operator bool() const { return data != NULL; }
@@ -45,16 +51,10 @@ namespace sgl
     /**
      * @brief Loads image into memory, STBData instance is automatically freed
      *  when out of scope. For more info @see stb_image.h at http://nothings.org/stb 
-     * @param outWidth Outputs image width in pixels
-     * @param outHeight Outputs image height in pixels
-     * @param outComponents Outputs # of image components in the image
      * @param requiredComponents Force # of image components in the result
      * @return Pixel data or NULL on an allocation failure, or an invalid image
      */
     STBData LoadImage(const char* filename,
-                      int& outWidth,
-                      int& outHeight,
-                      int& outComponents,
                       int requiredComponents = 0);
     
 } // namespace sgl

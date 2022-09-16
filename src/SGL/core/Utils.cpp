@@ -20,15 +20,9 @@ namespace sgl
     {
         SGL_FUNCTION();
 
-        int w = 0, h = 0, n = 0;
-        auto p = stbi_load(filename,
-                           &w, &h,
-                           &n, requiredComponents);
-        outWidth = w;
-        outHeight = h;
-        outComponents = n;
-
-        return p;
+        return stbi_load(filename,
+                         &outWidth, &outHeight,
+                         &outComponents, requiredComponents);
     }
 
     void FreeImageData(unsigned char* data)
@@ -37,11 +31,15 @@ namespace sgl
         stbi_image_free(data);
     }
 
-    STBData::STBData(unsigned char* p)
-        : data(p)
+    STBData::STBData(int w, int h, int ch, unsigned char* p)
+        : width(w),
+          height(h),
+          channels(ch),
+          data(p)
     {
         SGL_FUNCTION();
     }
+
     STBData::~STBData()
     {
         SGL_FUNCTION();
@@ -53,17 +51,15 @@ namespace sgl
     }
 
     STBData LoadImage(const char* filename,
-                      int& outWidth,
-                      int& outHeight,
-                      int& outComponents,
                       int requiredComponents)
     {
         SGL_FUNCTION();
 
-        unsigned char* data = LoadImageData(filename,
-                                            outWidth, outHeight,
-                                            outComponents, requiredComponents);
-        return STBData(data);
+        STBData data;
+        data.data = LoadImageData(filename,
+                                  data.width, data.height,
+                                  data.channels, requiredComponents);
+        return data;
     }
     
 } // namespace sgl
