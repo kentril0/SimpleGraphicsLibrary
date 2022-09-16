@@ -6,12 +6,38 @@
 #include "SGL/pch.h"
 #include "SGL/core/Utils.h"
 
+#include <fstream>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
 
 namespace sgl
 {
+    std::vector<char> LoadFile(std::string_view filename)
+    {
+        // Open reading from the end, read as binary
+        std::ifstream file(filename.data(), std::ios::ate | std::ios::binary);
+        SGL_ASSERT_MSG(file.is_open(), "Failed to open a file '{}'", filename);
+        if (!file.is_open())
+        {
+            std::cerr << "Failed to open a file: '" << filename << "'\n";
+            exit(1);
+        }
+
+        // Use read position to determine the size of the file
+        size_t fileSize = (size_t) file.tellg();
+        std::vector<char> buffer(fileSize);
+
+        // Seek back to the beginning of the file and read all of the bytes
+        file.seekg(0);
+        file.read(buffer.data(), fileSize);
+
+        file.close();
+
+        return buffer;
+    }
+
     unsigned char* LoadImageData(const char* filename,
                                    int& outWidth,
                                    int& outHeight,
@@ -29,6 +55,12 @@ namespace sgl
     {
         SGL_FUNCTION();
         stbi_image_free(data);
+    }
+
+    STBData::STBData()
+        : STBData(0, 0, 0, NULL)
+    {
+
     }
 
     STBData::STBData(int w, int h, int ch, unsigned char* p)

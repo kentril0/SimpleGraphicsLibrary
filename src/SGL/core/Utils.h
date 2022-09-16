@@ -10,6 +10,13 @@
 namespace sgl
 {
     /**
+     * @brief Reads contents of a file as binary
+     * @param filename The file to read from
+     * @return Vector of characters from read binary data
+     */
+    std::vector<char> LoadFile(std::string_view filename);
+
+    /**
      * @brief Loads image into memory, MUST FREE memory manually using
      * 'FreeImageMemory()'.
      * For more info @see stb_image.h at http://nothings.org/stb 
@@ -38,7 +45,7 @@ namespace sgl
         int channels;
         unsigned char* data;
 
-        STBData() : STBData(0, 0, 0, NULL) {}
+        STBData();
         STBData(int w, int h, int ch, unsigned char* p);
         ~STBData();
 
