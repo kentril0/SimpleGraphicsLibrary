@@ -13,109 +13,14 @@
 
 namespace sgl
 {
-    enum class ElementType 
-    {
-        Bool = 0,
-        UInt8, UInt8_2, UInt8_3, 
-        Int, Int2, Int3, Int4,
-        UInt, UInt2, UInt3,
-        Float, Float2, Float3, Float4,
-        Mat3, Mat4,
-    };
-
-    const char* ElementTypeToString(ElementType type);
-
-    static constexpr auto FLOAT_BYTES = sizeof(float);
-    static constexpr auto INT32_BYTES = sizeof(int32_t);
-    static constexpr auto UINT8_BYTES = sizeof(uint8_t);
-
-    struct BufferElement
-    {
-        ElementType type;
-        uint32_t size;
-        int32_t offset;
-        int32_t relOffset;
-        bool normalized;
-
-        BufferElement() = default;
-
-        /** 
-         * @param type Type of the element as an attribute.
-         * @param desc Used only as a note to yourself.
-         * @param offset Starting byte of the element in the buffer.
-         * @param relativeOffset Starting byte inside a structure the element is
-         *  part of.
-         * @param normalized If true, will be converted to floating-point to
-         *  [0,1] for unsigned or [-1,1] for signed types.
-         */
-        BufferElement(ElementType type,
-                      const char* desc,
-                      int32_t offset = 0,
-                      int32_t relativeOffset = 0,
-                      bool normalized = false);
-
-        constexpr uint32_t ElementTypeSize() const
-        {
-            switch(type)
-            {
-                case ElementType::Float:     return FLOAT_BYTES;
-                case ElementType::Float2:    return FLOAT_BYTES * 2;
-                case ElementType::Float3:    return FLOAT_BYTES * 3;
-                case ElementType::Float4:    return FLOAT_BYTES * 4;
-                case ElementType::Mat3:      return FLOAT_BYTES * 3 * 3;
-                case ElementType::Mat4:      return FLOAT_BYTES * 4 * 4;
-                case ElementType::Int:       return INT32_BYTES;
-                case ElementType::Int2:      return INT32_BYTES * 2;
-                case ElementType::Int3:      return INT32_BYTES * 3;
-                case ElementType::Int4:      return INT32_BYTES * 4;
-                case ElementType::UInt8:     return UINT8_BYTES;
-                case ElementType::UInt8_2:   return UINT8_BYTES * 2;
-                case ElementType::UInt8_3:   return UINT8_BYTES * 3;
-                case ElementType::UInt:      return INT32_BYTES * 2;
-                case ElementType::UInt2:     return INT32_BYTES * 2;
-                case ElementType::UInt3:     return INT32_BYTES * 3;
-                case ElementType::Bool:      return UINT8_BYTES;
-            }
-            //SGL_ASSERT_MSG(false, "Unknown buffer element data type: {}", type);
-            return 0;
-        }
-
-        /** @return Number of components of the element type */
-        constexpr uint32_t ComponentCount() const
-        {
-            switch(type)
-            {
-                case ElementType::Float:     return 1;
-                case ElementType::Float2:    return 2;
-                case ElementType::Float3:    return 3;
-                case ElementType::Float4:    return 4;
-                case ElementType::Mat3:      return 3;  // 3 * Float3
-                case ElementType::Mat4:      return 4;  // 4 * Float4
-                case ElementType::Int:       return 1;
-                case ElementType::Int2:      return 2;
-                case ElementType::Int3:      return 3;
-                case ElementType::Int4:      return 4;
-                case ElementType::UInt8:     return 1;
-                case ElementType::UInt8_2:   return 2;
-                case ElementType::UInt8_3:   return 3;
-                case ElementType::UInt:      return 1;
-                case ElementType::UInt2:     return 2;
-                case ElementType::UInt3:     return 3;
-                case ElementType::Bool:      return 1;
-            }
-            //SGL_ASSERT_MSG(false, "Unknown buffer element data type: {}", type);
-            return 0;        
-        }
-
-        std::string ToString() const;
-    };
+    struct BufferElement;
 
     class BufferLayout
     {
     public:
         BufferLayout();
         BufferLayout(const std::initializer_list<BufferElement>& elements);
-        
+
         const std::vector<BufferElement>& GetElements() const {
             return m_Elements;
         }
@@ -145,6 +50,51 @@ namespace sgl
     private:
         std::vector<BufferElement> m_Elements;
         uint32_t m_Stride{ 0 };
+    };
+
+    enum class ElementType 
+    {
+        Bool = 0,
+        UInt8, UInt8_2, UInt8_3, 
+        Int, Int2, Int3, Int4,
+        UInt, UInt2, UInt3,
+        Float, Float2, Float3, Float4,
+        Mat3, Mat4
+    };
+
+    const char* ElementTypeToString(ElementType type);
+
+    struct BufferElement
+    {
+        ElementType type;
+        uint32_t size;
+        int32_t offset;
+        int32_t relOffset;
+        bool normalized;
+
+        BufferElement() = default;
+
+        /** 
+         * @param type Type of the element as an attribute.
+         * @param desc Used only as a note to yourself.
+         * @param offset Starting byte of the element in the buffer.
+         * @param relativeOffset Starting byte inside a structure the element is
+         *  part of.
+         * @param normalized If true, will be converted to floating-point to
+         *  [0,1] for unsigned or [-1,1] for signed types.
+         */
+        BufferElement(ElementType type,
+                      const char* desc,
+                      int32_t offset = 0,
+                      int32_t relativeOffset = 0,
+                      bool normalized = false);
+
+        uint32_t ElementTypeSize() const;
+
+        /** @return Number of components of the element type */
+        uint32_t ComponentCount() const;
+
+        std::string ToString() const;
     };
 
 } // namespace sgl

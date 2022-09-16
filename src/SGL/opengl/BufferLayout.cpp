@@ -8,25 +8,13 @@
 
 #include <sstream>
 
-#define FLOAT_BYTES (sizeof(float))
-#define INT32_BYTES (sizeof(int32_t))
-#define UINT8_BYTES (sizeof(uint8_t))
+#define FLOAT_BYTES ( sizeof(float) )
+#define INT32_BYTES ( sizeof(int32_t) )
+#define UINT8_BYTES ( sizeof(uint8_t) )
 
 
 namespace sgl
 {
-    BufferElement::BufferElement(ElementType type, const char* desc,
-                                 int32_t offset, int32_t relativeOffset,
-                                 bool normalized)
-        : type(type), 
-          size(ElementTypeSize()),
-          offset(offset),
-          relOffset(relativeOffset),
-          normalized(normalized)
-    { 
-        (void)desc;
-    }
-
     BufferLayout::BufferLayout()
     {
         SGL_FUNCTION();
@@ -85,6 +73,101 @@ namespace sgl
         }
     }
 
+    void BufferLayout::DebugPrint() const
+    {
+    #ifdef SGL_DEBUG
+        SGL_LOG_INFO("BufferLayout info:\n Elements total: {}, Stride {}",
+                     m_Elements.size(), m_Stride);
+
+        uint32_t ctr = 0;
+        for (const auto& e : m_Elements)
+        {
+            SGL_LOG_INFO(" Element {}: {}", ctr++, e.ToString());
+        }
+    #endif
+    }
+
+    // =========================================================================
+
+    BufferElement::BufferElement(ElementType type, const char* desc,
+                                 int32_t offset, int32_t relativeOffset,
+                                 bool normalized)
+        : type(type),
+          size(ElementTypeSize()),
+          offset(offset),
+          relOffset(relativeOffset),
+          normalized(normalized)
+    {
+        (void)desc;
+    }
+
+    uint32_t BufferElement::ElementTypeSize() const
+    {
+        switch(type)
+        {
+            case ElementType::Float:     return FLOAT_BYTES;
+            case ElementType::Float2:    return FLOAT_BYTES * 2;
+            case ElementType::Float3:    return FLOAT_BYTES * 3;
+            case ElementType::Float4:    return FLOAT_BYTES * 4;
+            case ElementType::Mat3:      return FLOAT_BYTES * 3 * 3;
+            case ElementType::Mat4:      return FLOAT_BYTES * 4 * 4;
+            case ElementType::Int:       return INT32_BYTES;
+            case ElementType::Int2:      return INT32_BYTES * 2;
+            case ElementType::Int3:      return INT32_BYTES * 3;
+            case ElementType::Int4:      return INT32_BYTES * 4;
+            case ElementType::UInt8:     return UINT8_BYTES;
+            case ElementType::UInt8_2:   return UINT8_BYTES * 2;
+            case ElementType::UInt8_3:   return UINT8_BYTES * 3;
+            case ElementType::UInt:      return INT32_BYTES * 2;
+            case ElementType::UInt2:     return INT32_BYTES * 2;
+            case ElementType::UInt3:     return INT32_BYTES * 3;
+            case ElementType::Bool:      return UINT8_BYTES;
+        }
+        SGL_ASSERT_MSG(false, "Unknown buffer element data type: {}",
+                       ElementTypeToString(type) );
+        return 0;
+    }
+
+    uint32_t BufferElement::ComponentCount() const
+    {
+        switch(type)
+        {
+            case ElementType::Float:     return 1;
+            case ElementType::Float2:    return 2;
+            case ElementType::Float3:    return 3;
+            case ElementType::Float4:    return 4;
+            case ElementType::Mat3:      return 3;  // 3 * Float3
+            case ElementType::Mat4:      return 4;  // 4 * Float4
+            case ElementType::Int:       return 1;
+            case ElementType::Int2:      return 2;
+            case ElementType::Int3:      return 3;
+            case ElementType::Int4:      return 4;
+            case ElementType::UInt8:     return 1;
+            case ElementType::UInt8_2:   return 2;
+            case ElementType::UInt8_3:   return 3;
+            case ElementType::UInt:      return 1;
+            case ElementType::UInt2:     return 2;
+            case ElementType::UInt3:     return 3;
+            case ElementType::Bool:      return 1;
+        }
+        SGL_ASSERT_MSG(false, "Unknown buffer element data type: {}",
+                       ElementTypeToString(type));
+        return 0;
+    }
+
+    std::string BufferElement::ToString() const
+    {
+        std::stringstream ss;
+        ss << "Type: " << ElementTypeToString(type)
+           << ", Size: " << size
+           << ", Offset: " << offset
+           << ", RelOffset: " << relOffset
+           << ", Normalized: " << normalized;
+        return ss.str();
+    }
+
+    // =========================================================================
+
     const char* ElementTypeToString(ElementType type)
     {
         switch(type)
@@ -109,31 +192,6 @@ namespace sgl
         }
         SGL_ASSERT_MSG(false, "Unknown buffer element data type");
         return "";
-    }
-
-    std::string BufferElement::ToString() const
-    {
-        std::stringstream ss;
-        ss << "Type: " << ElementTypeToString(type)
-           << ", Size: " << size
-           << ", Offset: " << offset
-           << ", RelOffset: " << relOffset
-           << ", Normalized: " << normalized;
-        return ss.str();
-    }
-
-    void BufferLayout::DebugPrint() const
-    {
-    #ifdef SGL_DEBUG
-        SGL_LOG_INFO("BufferLayout info:\n Elements total: {}, Stride {}",
-                     m_Elements.size(), m_Stride);
-
-        uint32_t ctr = 0;
-        for (const auto& e : m_Elements)
-        {
-            SGL_LOG_INFO(" Element {}: {}", ctr++, e.ToString());
-        }
-    #endif
     }
 
 } // namespace sgl
