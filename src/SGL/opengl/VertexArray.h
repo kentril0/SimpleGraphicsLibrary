@@ -20,6 +20,7 @@ namespace sgl
     {
     public:
         static std::shared_ptr<VertexArray> Create();
+        static std::unique_ptr<VertexArray> CreateUniq();
 
     public:
         VertexArray();
@@ -41,6 +42,9 @@ namespace sgl
         std::shared_ptr<IndexBuffer> GetIndexBuffer() const {
             return m_IndexBuffer;
         };
+
+        void ClearVertexBuffers();
+        void ClearIndexBuffer();
 
     private:
         void CreateVertexArray();

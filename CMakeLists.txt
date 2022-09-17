@@ -16,24 +16,29 @@ endif()
 # Language Settings
 
 # TODO set only when in develop
-set(SGL_DEVELOP true)
+set(SGL_DEVELOP TRUE)
 
 set(SGL_FLAGS_DEBUG "-DSGL_DEBUG -DSGL_ENABLE_ASSERTS")
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${SGL_FLAGS_DEBUG}")
 
 # ------------------------------------------------------------------------------
 # Options
+
+if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    set(SGL_STANDALONE TRUE)
+endif()
+
 option(SGL_BUILD_STATIC "Build SGL as a static library" ON)
-option(BUILD_EXAMPLES   "Build examples"                ON)
+option(SGL_BUILD_EXAMPLES "Build examples" ${SGL_STANDALONE})
 
 set(BUILD_DIR "${CMAKE_BINARY_DIR}")
 # ------------------------------------------------------------------------------
 
 if(SGL_BUILD_STATIC)
-    set(LIBS_DIR "${CMAKE_SOURCE_DIR}/libs")
+    set(LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -80,19 +85,16 @@ if(SGL_BUILD_STATIC)
     set(GLFW_INCLUDE_DIR "${GLFW_DIR}/include")
     set(GLFW_BINARY_DIR "${BUILD_DIR}/glfw")
 
+    set(GLFW_LIBRARY_TYPE "STATIC")
     set(GLFW_BUILD_EXAMPLES OFF)
     set(GLFW_BUILD_TESTS OFF)
     set(GLFW_BUILD_DOCS OFF)
     set(GLFW_INSTALL OFF)
-    option(GLFW_DOCUMENT_INTERNALS OFF)
+    set(GLFW_DOCUMENT_INTERNALS OFF)
 
-    set(GLFW_LIBRARIES 
-      ${GLFW_BINARY_DIR}/src/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX}
-    )
-
-    # Adds 'glfw' variable - the project name
     add_subdirectory(${GLFW_DIR} ${GLFW_BINARY_DIR} EXCLUDE_FROM_ALL)
 
+    set(GLFW_LIBRARIES glfw)
     if(UNIX)
         set(GLFW_LIBRARIES ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES} ${X11_LIBRARIES}
                            ${X11_Xrandr_LIB} ${X11_Xcursor_LIB}
@@ -118,8 +120,8 @@ if(SGL_BUILD_STATIC)
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
 
-    set(SGL_DIR "${CMAKE_SOURCE_DIR}/src/SGL")
-    set(SGL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/src")
+    set(SGL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/SGL")
+    set(SGL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
     set(SGL_CORE_DIR "${SGL_DIR}/core")
     set(SGL_OPENGL_DIR "${SGL_DIR}/opengl")
@@ -155,19 +157,16 @@ if(SGL_BUILD_STATIC)
 
     target_precompile_headers( ${PROJECT_NAME} PRIVATE "${SGL_DIR}/pch.h" )
 
-    #####################
-    # TODO Develop only #
     if(SGL_DEVELOP)
         set_target_properties( ${PROJECT_NAME} PROPERTIES
             COMPILE_FLAGS "${SGL_FLAGS_DEBUG}"
         )
     endif()
-    #^^^^^^^^^^^^^^^^^^^^
 
 endif()
 
-if(BUILD_EXAMPLES)
-    set(EXAMPLES_DIR "${CMAKE_SOURCE_DIR}/examples")
+if(SGL_BUILD_EXAMPLES)
+    set(EXAMPLES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/examples")
     message(STATUS "Building examples")
     add_subdirectory(${EXAMPLES_DIR})
 endif()

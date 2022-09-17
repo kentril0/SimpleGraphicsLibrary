@@ -79,7 +79,10 @@ namespace sgl
         void SetVSync(bool enabled);
         bool IsVSync() const { return m_Data.VSync; }
 
+        // ---------------------------------------------------------------------
         // Callbacks
+
+        void SetUserPointer(void* ptr) const;
 
         /**
          * @param callback Function of signature:

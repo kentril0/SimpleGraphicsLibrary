@@ -17,6 +17,12 @@ namespace sgl
     std::vector<char> LoadFile(std::string_view filename);
 
     /**
+     * @brief Reads file as a text
+     * @param filename The file to read from
+     */
+    std::string LoadTextFile(std::string_view filename);
+
+    /**
      * @brief Loads image into memory, MUST FREE memory manually using
      * 'FreeImageMemory()'.
      * For more info @see stb_image.h at http://nothings.org/stb 

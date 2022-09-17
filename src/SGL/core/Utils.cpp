@@ -16,9 +16,13 @@ namespace sgl
 {
     std::vector<char> LoadFile(std::string_view filename)
     {
+        SGL_LOG_INFO("Loading file: {}", filename);
+
         // Open reading from the end, read as binary
-        std::ifstream file(filename.data(), std::ios::ate | std::ios::binary);
+        std::ifstream file( filename.data(),
+                            std::ios::ate | std::ios::binary );
         SGL_ASSERT_MSG(file.is_open(), "Failed to open a file '{}'", filename);
+
         if (!file.is_open())
         {
             std::cerr << "Failed to open a file: '" << filename << "'\n";
@@ -36,6 +40,23 @@ namespace sgl
         file.close();
 
         return buffer;
+    }
+
+    std::string LoadTextFile(std::string_view filename)
+    {
+        SGL_LOG_INFO("Loading Text file: {}", filename);
+
+        std::ifstream inFile( filename.data() );
+        SGL_ASSERT_MSG(inFile.is_open(),
+                        "Failed to open a file '{}'", filename);
+        if (!inFile.is_open())
+        {
+            std::cerr << "Failed to open a file: '" << filename << "'\n";
+            exit(1);
+        }
+
+        return { std::istreambuf_iterator<char>(inFile), 
+                 std::istreambuf_iterator<char>() };
     }
 
     unsigned char* LoadImageData(const char* filename,
