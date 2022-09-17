@@ -32,7 +32,7 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 option(SGL_BUILD_STATIC "Build SGL as a static library" ON)
-option(SGL_BUILD_EXAMPLES   "Build examples"                ${SGL_STANDALONE})
+option(SGL_BUILD_EXAMPLES "Build examples" ${SGL_STANDALONE})
 
 set(BUILD_DIR "${CMAKE_BINARY_DIR}")
 # ------------------------------------------------------------------------------
