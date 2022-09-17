@@ -117,6 +117,44 @@ if(SGL_BUILD_STATIC)
     set(STB_DIR "${LIBS_DIR}/stb")
     set(STB_INCLUDE_DIR "${LIBS_DIR}")
 
+    #---------------------------------------------------------------------------
+    # imGUI library
+
+    set(IMGUI_INCLUDE_DIR "${LIBS_DIR}/imgui")
+
+    add_library(imgui
+        "${IMGUI_INCLUDE_DIR}/imgui.h"
+        "${IMGUI_INCLUDE_DIR}/imgui.cpp"
+        "${IMGUI_INCLUDE_DIR}/imconfig.h"
+        "${IMGUI_INCLUDE_DIR}/imgui_internal.h"
+        "${IMGUI_INCLUDE_DIR}/imstb_textedit.h"
+        "${IMGUI_INCLUDE_DIR}/imstb_rectpack.h"
+        "${IMGUI_INCLUDE_DIR}/imstb_truetype.h"
+        "${IMGUI_INCLUDE_DIR}/imgui_widgets.cpp"
+        "${IMGUI_INCLUDE_DIR}/imgui_tables.cpp"
+        "${IMGUI_INCLUDE_DIR}/imgui_demo.cpp"
+        "${IMGUI_INCLUDE_DIR}/imgui_draw.cpp"
+        "${IMGUI_INCLUDE_DIR}/backends/imgui_impl_glfw.h"
+        "${IMGUI_INCLUDE_DIR}/backends/imgui_impl_glfw.cpp"
+        "${IMGUI_INCLUDE_DIR}/backends/imgui_impl_opengl3.h"
+        "${IMGUI_INCLUDE_DIR}/backends/imgui_impl_opengl3.cpp"
+    )
+    add_dependencies(imgui glfw glad)
+    target_link_libraries(imgui
+        ${GLFW_LIBRARIES}
+        ${GLAD_LIBRARIES}
+    )
+
+    target_include_directories(imgui
+        PRIVATE ${GLFW_INCLUDE_DIR}
+        PRIVATE ${GLAD_INCLUDE_DIR}
+        PUBLIC ${IMGUI_INCLUDE_DIR}
+    )
+
+    target_compile_options(imgui
+      PRIVATE "-DIMGUI_IMPL_OPENGL_LOADER_GLAD"
+    )
+
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
 
@@ -147,12 +185,14 @@ if(SGL_BUILD_STATIC)
     target_include_directories(${PROJECT_NAME}
         PUBLIC ${SGL_INCLUDE_DIR} ${SPDLOG_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} 
                ${GLFW_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${STB_INCLUDE_DIR}
+               ${IMGUI_INCLUDE_DIR}
     )
 
     target_link_libraries(${PROJECT_NAME}
         PRIVATE spdlog::spdlog 
         PRIVATE ${GLAD_LIBRARIES}
         PRIVATE ${GLFW_LIBRARIES}
+        PRIVATE imgui
     )
 
     target_precompile_headers( ${PROJECT_NAME} PRIVATE "${SGL_DIR}/pch.h" )
