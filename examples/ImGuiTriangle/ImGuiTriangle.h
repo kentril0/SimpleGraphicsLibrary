@@ -4,6 +4,7 @@
  */
 
 #pragma once
+#define SGL_USE_IMGUI
 #include <SGL/SGL.h>
 
 
@@ -17,6 +18,7 @@ protected:
     virtual void Start() override;
     virtual void Update(float dt) override;
     virtual void Render() override;
+    virtual void OnImGuiRender() override;
 
 private:
     void InitializeRenderObjects();

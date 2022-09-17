@@ -122,3 +122,9 @@ void ImGuiTriangle::Render()
 
     glDrawArrays(GL_TRIANGLES, 0, kVertexCount);
 }
+
+void ImGuiTriangle::OnImGuiRender()
+{
+    static bool showDemoWindow = true;
+    ImGui::ShowDemoWindow(&showDemoWindow);
+}
