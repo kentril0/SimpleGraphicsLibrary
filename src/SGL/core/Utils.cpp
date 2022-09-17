@@ -6,12 +6,31 @@
 #include "SGL/pch.h"
 #include "SGL/core/Utils.h"
 
+#include <fstream>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
 
 namespace sgl
 {
+    std::string LoadTextFile(std::string_view filename)
+    {
+        SGL_LOG_INFO("Loading Text file: {}", filename);
+
+        std::ifstream inFile( filename.data() );
+        SGL_ASSERT_MSG(inFile.is_open(),
+                        "Failed to open a file '{}'", filename);
+        if (!inFile.is_open())
+        {
+            std::cerr << "Failed to open a file: '" << filename << "'\n";
+            exit(1);
+        }
+
+        return { std::istreambuf_iterator<char>(inFile),
+                 std::istreambuf_iterator<char>() };
+    }
+
     unsigned char* LoadImageData(const char* filename,
                                    int& outWidth,
                                    int& outHeight,
