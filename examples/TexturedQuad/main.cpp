@@ -3,7 +3,6 @@
  * (http://opensource.org/licenses/MIT)
  */
 
-#include <SGL/SGL.h>
 #include "TexturedQuad.h"
 
 
