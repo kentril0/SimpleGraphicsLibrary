@@ -178,7 +178,11 @@ namespace sgl
         SGL_FUNCTION();
 
         if (s_WindowCount == 0)
+        {
+            SGL_LOG_WARN("Shutting down GLFW, make sure no GL call happens"     
+                         " after!");
             glfwTerminate();
+        }
     }
 
 #ifdef SGL_DEBUG
