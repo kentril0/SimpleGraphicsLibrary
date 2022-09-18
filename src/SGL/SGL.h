@@ -25,6 +25,7 @@
 #include "SGL/opengl/Shader.h"
 
 #include "SGL/opengl/Texture2D.h"
+#include "SGL/opengl/CubeMapTexture.h"
 
 
 namespace sgl
