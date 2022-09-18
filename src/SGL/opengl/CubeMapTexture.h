@@ -1,4 +1,10 @@
-#pragma once
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License
+ * (http://opensource.org/licenses/MIT)
+ */
+
+#ifndef SGL_OPENGL_CUBE_MAP_TEXTURE_H_
+#define SGL_OPENGL_CUBE_MAP_TEXTURE_H_
 
 #include <array>
 #include <cstdint>
@@ -27,7 +33,12 @@ namespace sgl
 
     private:
         void CreateCubeMapTexture(const FacesData& imagesData);
+        void SetupStorage() const;
+        void SetFacesData(const FacesData& imagesData) const;
         void DeleteTexture();
+
+        void SetTextureParams() const;
+        void CreateTexture();
 
     private:
         uint32_t m_ID{ 0 };
@@ -38,3 +49,6 @@ namespace sgl
     };
 
 } // namespace sgl
+
+
+#endif // SGL_OPENGL_CUBE_MAP_TEXTURE_H_

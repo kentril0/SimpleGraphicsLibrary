@@ -1,6 +1,10 @@
-#include "CubeMapTexture.h"
+/**
+ *  Copyright (c) 2022 SGL authors Distributed under MIT License 
+ * (http://opensource.org/licenses/MIT)
+ */
 
-#include <SGL/SGL.h>
+#include "SGL/pch.h"
+#include "CubeMapTexture.h"
 
 
 namespace sgl
@@ -18,6 +22,16 @@ namespace sgl
         CreateCubeMapTexture(facesData);
     }
 
+    void CubeMapTexture::CreateCubeMapTexture(
+        const FacesData& imagesData)
+    {
+        SGL_FUNCTION();
+        CreateTexture();
+        SetupStorage();
+        SetFacesData(imagesData);
+        SetTextureParams();
+    }
+
     CubeMapTexture::~CubeMapTexture()
     {
         DeleteTexture();
@@ -33,20 +47,29 @@ namespace sgl
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
 
-    void CubeMapTexture::CreateCubeMapTexture(
-        const FacesData& imagesData)
+    void CubeMapTexture::CreateTexture()
+    {
+        SGL_FUNCTION();
+        glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_ID);
+        SGL_ASSERT(m_ID > 0);
+    }
+
+    void CubeMapTexture::SetupStorage() const
     {
         SGL_FUNCTION();
 
-    #ifndef SGL_GL_33
-        glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_ID);
-        SGL_ASSERT(m_ID > 0);
-
+        const uint32_t kFormat = m_FaceFormat == GL_RGB ? GL_RGB8
+                                                        : GL_RGBA8;
         glTextureStorage2D(m_ID,
                            1,
-                           GL_RGB8,
+                           kFormat,
                            m_FaceWidth,
                            m_FaceHeight);
+    }
+
+    void CubeMapTexture::SetFacesData(const FacesData& imagesData) const
+    {
+        SGL_FUNCTION();
 
         uint32_t face = 0;
         for (auto data : imagesData)
@@ -64,26 +87,12 @@ namespace sgl
                                 data);
             ++face;
         }
-    #else
-        glGenTextures(1, &m_ID);
-        this->Bind();
-        SGL_ASSERT(m_ID > 0);
+    }
 
-        uint32_t i = 0;
-        for (auto data : imagesData)
-        {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 
-                         0, 
-                         m_FaceFormat,
-                         m_FaceWidth, m_FaceHeight, 
-                         0, m_FaceFormat,
-                         GL_UNSIGNED_BYTE, data);
-            ++i;
-        }
-    #endif
+    void CubeMapTexture::SetTextureParams() const
+    {
+        SGL_FUNCTION();
 
-        //// Set filtering, wrapping
-    #ifndef SGL_GL_33
         int param = GL_LINEAR;
         glTextureParameteriv(m_ID, GL_TEXTURE_MIN_FILTER, &param);
         glTextureParameteriv(m_ID, GL_TEXTURE_MAG_FILTER, &param);
@@ -91,14 +100,6 @@ namespace sgl
         glTextureParameteriv(m_ID, GL_TEXTURE_WRAP_S, &param);
         glTextureParameteriv(m_ID, GL_TEXTURE_WRAP_T, &param);
         glTextureParameteriv(m_ID, GL_TEXTURE_WRAP_R, &param);
-    #else
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-        this->UnBind();
-    #endif
     }
 
     void CubeMapTexture::DeleteTexture()
@@ -107,4 +108,5 @@ namespace sgl
         glDeleteTextures(1, &m_ID);
         m_ID = 0;
     }
-}
+
+} // namespace SGL
