@@ -118,9 +118,9 @@ namespace sgl
     #endif
         void Init()
         {
-            CreateImGuiContext();
             m_StartTimer.Start();
             this->Start();
+            CreateImGuiContext();
         }
 
         void Loop()
