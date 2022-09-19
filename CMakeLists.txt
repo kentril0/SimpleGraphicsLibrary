@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-set(SGL_VERSION "0.1")
+set(SGL_VERSION "0.2")
 
 project(SGL VERSION ${SGL_VERSION} )
 message(STATUS "<SGL> version: ${SGL_VERSION}")
