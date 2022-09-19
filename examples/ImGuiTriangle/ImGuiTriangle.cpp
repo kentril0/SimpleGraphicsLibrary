@@ -4,6 +4,7 @@
  */
 
 #include "ImGuiTriangle.h"
+#include <SGL/core/ProfileTimer.h>
 
 
 ImGuiTriangle::ImGuiTriangle()
@@ -114,6 +115,8 @@ void ImGuiTriangle::Update(float dt)
 
 void ImGuiTriangle::Render()
 {
+    SGL_PROFILE_SCOPE();
+
     glClear(GL_COLOR_BUFFER_BIT);
 
     // sizeof(verticesColors) / (sizeof(float) * 6)
