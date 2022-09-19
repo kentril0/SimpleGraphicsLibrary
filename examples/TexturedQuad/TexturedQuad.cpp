@@ -3,6 +3,8 @@
  * (http://opensource.org/licenses/MIT)
  */
 
+#define SGL_DEBUG
+#define SGL_ENABLE_ASSERTS
 #include "TexturedQuad.h"
 #include <glm/gtx/string_cast.hpp>
 
@@ -115,7 +117,7 @@ void TexturedQuad::CreateTextures()
     const int kForceRGBA = 4;
     auto data = sgl::LoadImage(s_kTextureName, kForceRGBA);
 
-    SGL_ASSERT_MSG(data, "Texture loaded: {}", bool(data));
+    SGL_ASSERT_MSG(data.Loaded(), "Texture loaded: {}", bool(data));
 
     // TODO format based on component count and type
     m_Texture = sgl::Texture2D::Create(data.width, data.height, data.data,
