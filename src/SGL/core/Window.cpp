@@ -37,7 +37,7 @@ namespace sgl
         // TODO Load GL only once?
         LoadGL();
 
-        glfwSetWindowUserPointer(m_Window, &m_Data);
+        SetUserPointer(&m_Data);
 
         SetVSync(true);
     }
@@ -96,6 +96,11 @@ namespace sgl
             glfwSwapInterval(0);
 
         m_Data.VSync = enabled;
+    }
+
+    void Window::SetUserPointer(void* ptr) const
+    {
+        glfwSetWindowUserPointer(m_Window, ptr);
     }
 
     void Window::SetKeyCallback(GLFWkeyfun callback) const
@@ -173,7 +178,11 @@ namespace sgl
         SGL_FUNCTION();
 
         if (s_WindowCount == 0)
+        {
+            SGL_LOG_WARN("Shutting down GLFW, make sure no GL call happens"     
+                         " after!");
             glfwTerminate();
+        }
     }
 
 #ifdef SGL_DEBUG

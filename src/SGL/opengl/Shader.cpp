@@ -94,7 +94,9 @@ namespace sgl
         SGL_FUNCTION();
 
         glLinkProgram(m_ID);
-        CheckLinkErrors();
+
+        const int kSuccess = CheckLinkErrors();
+        SGL_ASSERT(kSuccess == GL_TRUE);
     }
 
     void Shader::Use() const
@@ -155,7 +157,7 @@ namespace sgl
         glUniformMatrix4fv(kLocation, 1, GL_FALSE, glm::value_ptr(mat));
     }
 
-    void Shader::CheckLinkErrors() const
+    int Shader::CheckLinkErrors() const
     {
         SGL_FUNCTION();
 
@@ -170,7 +172,9 @@ namespace sgl
             SGL_LOG_ERR("| Error::Program: Link-time error: \n{}\n{}",
                     log,
                     "---------------------------------------------------");
-        }   
+        }
+
+        return success;
     }
     
 } // namespace sgl

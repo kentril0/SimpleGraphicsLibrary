@@ -3,14 +3,14 @@
  * (http://opensource.org/licenses/MIT)
  */
 
-#include "HelloTriangle.h"
+#include "ImGuiTriangle.h"
 
 
 int main()
 {
     sgl::Init();
 
-    auto app = HelloTriangle();
+    auto app = ImGuiTriangle();
     app.Run();
 
     return 0;

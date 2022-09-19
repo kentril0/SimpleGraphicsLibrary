@@ -13,6 +13,7 @@
 #include "SGL/core/Base.h"
 #include "SGL/core/Log.h"
 #include "SGL/core/Assert.h"
+#include "SGL/core/Utils.h"
 #include "SGL/core/Window.h"
 #include "SGL/core/Application.h"
 
@@ -22,6 +23,9 @@
 
 #include "SGL/opengl/ShaderObject.h"
 #include "SGL/opengl/Shader.h"
+
+#include "SGL/opengl/Texture2D.h"
+#include "SGL/opengl/CubeMapTexture.h"
 
 
 namespace sgl

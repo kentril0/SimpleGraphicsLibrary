@@ -2,16 +2,16 @@
 # (http://opensource.org/licenses/MIT)
 
 cmake_minimum_required(VERSION 3.16)
-project(HelloTriangle CXX)
+project(ImGuiTriangle CXX)
 
-message(STATUS "Example: HelloTriangle")
+message(STATUS "Example: ImGuiTriangle")
 
 if(NOT TARGET SGL)
     # Stand-alone build
     find_package(SGL REQUIRED)
 endif()
 
-add_executable(${PROJECT_NAME} HelloTriangle.cpp main.cpp)
+add_executable(${PROJECT_NAME} ImGuiTriangle.cpp main.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE SGL::SGL)

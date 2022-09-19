@@ -33,5 +33,6 @@
 #include "SGL/core/Assert.h"
 #include "SGL/core/Timestep.h"
 #include "SGL/core/Timer.h"
+#include "SGL/core/Utils.h"
 
 #endif // SGL_PCH_H_

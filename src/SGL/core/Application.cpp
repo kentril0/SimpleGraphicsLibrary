@@ -22,13 +22,18 @@ namespace sgl
         SGL_FUNCTION();
     }
 
+#if 0
     void Application::Run()
     {
         SGL_FUNCTION();
 
         // TODO show window
 
-        Start();
+        CreateImGuiContext();
+
+        m_StartTimer.Start();
+
+        this->Start();
 
         while ( m_Window->IsOpen() )
         {
@@ -36,15 +41,19 @@ namespace sgl
             const sgl::Timestep dt(curTime - m_LastFrameTime);
             m_LastFrameTime = curTime;
 
-            Update(dt);
+            this->Update(dt);
 
-            Render();
+            this->Render();
+
+            START_IMGUI_FRAME();
+                this->OnImGuiRender();
+            RENDER_IMGUI_FRAME();
 
             m_Window->Display();
             m_Window->PollEvents();
         }
-
         // TODO hide window
     }
+#endif
 
 } // namespace sgl

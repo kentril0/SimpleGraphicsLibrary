@@ -44,6 +44,13 @@ namespace sgl
         return std::make_shared<VertexArray>();
     }
 
+    std::unique_ptr<VertexArray> VertexArray::CreateUniq()
+    {
+        return std::make_unique<VertexArray>();
+    }
+
+    // =========================================================================
+
     VertexArray::VertexArray()
     {
         SGL_FUNCTION();
@@ -162,6 +169,19 @@ namespace sgl
         }
 
         m_VertexBuffers.push_back(vbo);
+    }
+
+    void VertexArray::ClearVertexBuffers()
+    {
+        SGL_FUNCTION();
+        m_VertexBuffers.clear();
+        m_BindingIndex = 0;
+    }
+
+    void VertexArray::ClearIndexBuffer()
+    {
+        SGL_FUNCTION();
+        m_IndexBuffer.reset();
     }
 
     void VertexArray::CreateVertexArray()

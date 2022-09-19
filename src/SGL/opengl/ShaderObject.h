@@ -58,7 +58,7 @@ namespace sgl
          */
         void DeleteShader();
 
-        void CheckCompilationErrors() const;
+        int CheckCompilationErrors() const;
 
     private:
         uint32_t m_ID{ 0 };

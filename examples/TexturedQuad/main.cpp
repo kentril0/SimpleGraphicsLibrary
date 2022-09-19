@@ -3,14 +3,14 @@
  * (http://opensource.org/licenses/MIT)
  */
 
-#include "HelloTriangle.h"
+#include "TexturedQuad.h"
 
 
 int main()
 {
     sgl::Init();
 
-    auto app = HelloTriangle();
+    auto app = TexturedQuad();
     app.Run();
 
     return 0;
