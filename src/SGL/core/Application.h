@@ -6,15 +6,20 @@
 #ifndef SGL_CORE_APPLICATION_H_
 #define SGL_CORE_APPLICATION_H_
 
+#include <memory> 
+#include <vector> 
+
 #include "SGL/core/Window.h"
 #include "SGL/core/Timer.h"
 #include "SGL/core/Timestep.h"
+#include "SGL/core/ProfileTimer.h"
+
+// Define SGL_USE_IMGUI macro to use ImGui
 
 #ifdef SGL_USE_IMGUI
     #include <imgui/imgui.h>
     #include <imgui/backends/imgui_impl_glfw.h>
     #include <imgui/backends/imgui_impl_opengl3.h>
-
 
     #define START_IMGUI_FRAME() do {    \
         ImGui_ImplOpenGL3_NewFrame();   \
@@ -32,15 +37,31 @@
 #endif
 
 
+// Profiling macros
+// use SGL_PROFILE_SCOPE() , or
+// use SGL_PROFILE_SCOPE("your description") 
+
+#define SGL_PSCOPE1(name) sgl::ProfileTimer timer##__LINE__( \
+    name, \
+    [&](sgl::ProfileRecord result) { m_ProfileResults.push_back(result); })
+
+#define SGL_PSCOPE0() sgl::ProfileTimer timer1##__LINE__( \
+    __func__, \
+    [&](sgl::ProfileRecord result) { m_ProfileResults.push_back(result); })
+
+#define SGL_EXPAND_PSCOPE(_0,_1,fname, ...) fname
+
+#define SGL_PROFILE_SCOPE(...) \
+    SGL_EXPAND_PSCOPE(_0, ##__VA_ARGS__, SGL_PSCOPE1, SGL_PSCOPE0)(__VA_ARGS__)
+
+
 namespace sgl
 {
     /**
-     * @brief Derive this class for convenience
-     */
+     * @brief Derive this class for convenience */
     class Application
     {
     public:
-        
         Application();
         ~Application();
     
@@ -72,6 +93,7 @@ namespace sgl
         std::unique_ptr<Window> m_Window;
     
         Timer m_StartTimer;    ///< Time elapsed after "Start()"
+        std::vector<ProfileRecord> m_ProfileResults;
 
     private:
     #ifndef SGL_USE_IMGUI
@@ -83,37 +105,16 @@ namespace sgl
          */
         void CreateImGuiContext() const
         {
-        SGL_FUNCTION();
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-        // Enable Keyboard Controls
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        // Enable Gamepad Controls
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+            SGL_FUNCTION();
+            IMGUI_CHECKVERSION();
+            ImGui::CreateContext();
+            ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-        // Setup Dear ImGui style
-        ImGui::StyleColorsDark();
-        //ImGui::StyleColorsLight();
+            ImGui::StyleColorsDark();
+            //ImGui::StyleColorsLight();
 
-        // Setup Platform/Renderer backends
-        ImGui_ImplGlfw_InitForOpenGL(m_Window->GetGLFWWindow(), true);
-        ImGui_ImplOpenGL3_Init(SGL_GLSL_VERSION_STR);
-
-        // Load Fonts
-        // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-        // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-        // - If the file cannot be loaded, the function will return NULL. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-        // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
-        // - Read 'docs/FONTS.md' for more instructions and details.
-        // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-        //io.Fonts->AddFontDefault();
-        //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-        //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-        //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-        //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
-        //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
-        //IM_ASSERT(font != NULL);
+            ImGui_ImplGlfw_InitForOpenGL(m_Window->GetGLFWWindow(), true);
+            ImGui_ImplOpenGL3_Init(SGL_GLSL_VERSION_STR);
         }
     #endif
         void Init()
@@ -137,12 +138,32 @@ namespace sgl
 
                 START_IMGUI_FRAME();
                     this->OnImGuiRender();
+                    ShowProfileResultsWindow();
                 RENDER_IMGUI_FRAME();
 
                 m_Window->Display();
                 m_Window->PollEvents();
             }
         }
+
+        #ifndef SGL_USE_IMGUI
+            void ShowProfileResultsWindow() { m_ProfileResults.clear(); }
+        #else
+            void ShowProfileResultsWindow()
+            {
+                if (m_ProfileResults.size() == 0) { return; }
+                ImGui::Begin("Profiling Results");
+                for (const auto& result : m_ProfileResults)
+                {
+                    char label[64];
+                    strcpy(label, "%.3f ms ");
+                    strcat(label, result.name);
+                    ImGui::Text(label, result.duration);
+                }
+                m_ProfileResults.clear();
+                ImGui::End();
+            }
+        #endif
 
     private:
         float m_LastFrameTime{ 0.0 };
