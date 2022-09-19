@@ -190,7 +190,7 @@ if(SGL_BUILD_STATIC)
     )
 
     target_link_libraries(${PROJECT_NAME}
-        PRIVATE spdlog::spdlog 
+        PRIVATE spdlog
         PRIVATE ${GLAD_LIBRARIES}
         PRIVATE ${GLFW_LIBRARIES}
         PRIVATE imgui
