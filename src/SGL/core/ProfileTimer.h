@@ -38,7 +38,7 @@ namespace sgl
             if (!m_Stopped)
                 Stop();
         }
-
+    private:
         inline void Start()
         {
             m_Start = std::chrono::high_resolution_clock::now();
@@ -47,12 +47,8 @@ namespace sgl
         void Stop()
         {
             m_Stopped = true;
-            const float kElapsed = Elapsed();
-            m_Func({ m_Name, kElapsed });
+            m_Func({ m_Name, Elapsed() });
         }
-
-        /** @return Time elapsed in seconds */
-        inline operator float() const { return Elapsed(); }
 
         inline float ElapsedMillis() const
         {
@@ -60,13 +56,6 @@ namespace sgl
                 (std::chrono::high_resolution_clock::now() - m_Start).count();
         }
 
-        inline float ElapsedMicro() const
-        {
-            return std::chrono::duration_cast<std::chrono::microseconds>
-                (std::chrono::high_resolution_clock::now() - m_Start).count();
-        }
-
-        // @return Time elapsed in seconds
         inline float Elapsed() const
         {
             return ElapsedMillis() * MILLIS_TO_SECONDS; 
