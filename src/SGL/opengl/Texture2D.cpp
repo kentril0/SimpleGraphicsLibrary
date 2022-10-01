@@ -15,13 +15,9 @@ namespace sgl
         return std::make_shared<Texture2D>();
     }
 
-    std::shared_ptr<Texture2D> Texture2D::Create(
-        uint32_t width, uint32_t height,
-        const unsigned char* data,
-        uint32_t format, uint32_t imageFormat, bool mipmaps)
+    std::shared_ptr<Texture2D> Texture2D::Create(const TextureInfo& info)
     {
-        return std::make_shared<Texture2D>(width, height, data, format,
-                                           imageFormat, mipmaps);
+        return std::make_shared<Texture2D>(info);
     }
 
     const uint32_t Texture2D::DEFAULT_WRAP_S = GL_REPEAT;
@@ -39,27 +35,32 @@ namespace sgl
         CreateTexture();
     }
 
-    Texture2D::Texture2D(uint32_t width,
-                         uint32_t height,
-                         const unsigned char* data,
-                         uint32_t format,
-                         uint32_t imageFormat,
-                         bool mipmaps)
+    Texture2D::Texture2D(const TextureInfo& info)
     {
         SGL_FUNCTION();
 
-        Init(width, height, format, imageFormat, mipmaps);
         CreateTexture();
-        SetDataImmutable(data);
-        GenMipMaps();
-
-        ApplyFiltering();
+        SetDataImmutable(info);
     }
 
     Texture2D::~Texture2D()
     {
         SGL_FUNCTION();
         DeleteTexture();
+    }
+
+    void Texture2D::SetDataImmutable(const TextureInfo& info)
+    {
+        SGL_FUNCTION();
+
+        Init(info.width, info.height,
+             info.format, info.imageFormat, info.imageDataType, info.mipmaps);
+
+        CreateStorageImmutable();
+        UpdateData(info.data);
+
+        GenMipMaps();
+        ApplyFiltering();
     }
 
     void Texture2D::Bind() const
@@ -82,18 +83,6 @@ namespace sgl
         glBindTextureUnit(unit, 0);
     }
 
-    void Texture2D::SetImage(uint32_t width, uint32_t height,
-                             const unsigned char* data, uint32_t format,
-                             uint32_t imageFormat, bool mipmaps)
-    {
-        SGL_FUNCTION();
-        Init(width, height, format, imageFormat, mipmaps);
-
-        SetDataImmutable(data);
-        GenMipMaps();
-        ApplyFiltering();
-    }
-
     void Texture2D::CreateTexture()
     {
         SGL_FUNCTION();
@@ -109,7 +98,8 @@ namespace sgl
     }
 
     void Texture2D::Init(uint32_t width, uint32_t height, uint32_t format,
-                         uint32_t imageFormat, bool mipmaps)
+                         uint32_t imageFormat, uint32_t imageDataType,
+                         bool mipmaps)
     {
         SGL_FUNCTION();
         m_Width = width;
@@ -117,6 +107,7 @@ namespace sgl
 
         m_Format = format;
         m_ImageFormat = imageFormat;
+        m_ImageDataType = imageDataType;
 
         m_Wrap_S = Texture2D::DEFAULT_WRAP_S;
         m_Wrap_T = Texture2D::DEFAULT_WRAP_T;
@@ -125,17 +116,17 @@ namespace sgl
         {
             m_MipLevels = std::log2(width);
             m_FilterMin = Texture2D::DEFAULT_MIN_FILTER_MIPMAP;
-            m_FilterMag = Texture2D::DEFAULT_MAG_FILTER;
         }
         else
         {
             m_MipLevels = 1;
             m_FilterMin = Texture2D::DEFAULT_MIN_FILTER;
-            m_FilterMag = Texture2D::DEFAULT_MAG_FILTER;
         }
+
+        m_FilterMag = Texture2D::DEFAULT_MAG_FILTER;
     }
 
-    void Texture2D::SetDataImmutable(const unsigned char* data) const
+    void Texture2D::CreateStorageImmutable() const
     {
         SGL_FUNCTION();
 
@@ -147,10 +138,9 @@ namespace sgl
                            m_Format,
                            // in texels
                            m_Width, m_Height);
-        UpdateData(data);
     }
 
-    void Texture2D::UpdateData(const unsigned char* data) const
+    void Texture2D::UpdateData(const void* data) const
     {
         SGL_FUNCTION();
 
@@ -163,7 +153,7 @@ namespace sgl
                             // format of the pixel data *RED, RGB, RGBA
                             m_ImageFormat,
                             // data type of the pixel data, *BYTE, FLOAT, INT
-                            GL_UNSIGNED_BYTE,
+                            m_ImageDataType,
                             // A pointer to the image data in memory
                             data);
 

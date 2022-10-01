@@ -14,13 +14,19 @@ namespace sgl
     class Texture2D
     {
     public:
+        struct TextureInfo 
+        {
+            int32_t width;
+            int32_t height;
+            const void* data;
+            uint32_t format;        ///< Sized texture format, e.g. GL_RGBA8
+            uint32_t imageFormat;   ///< Image data format, e.g. GL_RGBA
+            uint32_t imageDataType; ///< Image data type, e.g. GL_UNSIGNED_BYTE
+            bool mipmaps;
+        };
+
         static std::shared_ptr<Texture2D> Create();
-        static std::shared_ptr<Texture2D> Create(uint32_t width,
-                                                 uint32_t height,
-                                                 const unsigned char* data,
-                                                 uint32_t format,
-                                                 uint32_t imageFormat,
-                                                 bool mipmaps = false);
+        static std::shared_ptr<Texture2D> Create(const TextureInfo& info);
 
         static const uint32_t DEFAULT_WRAP_S, DEFAULT_WRAP_T;
         static const uint32_t DEFAULT_MIN_FILTER, 
@@ -29,13 +35,7 @@ namespace sgl
         Texture2D();
 
         /** @brief Immutable data storage */
-        Texture2D(uint32_t width,
-                  uint32_t height,
-                  const unsigned char* data,
-                  uint32_t format,
-                  uint32_t imageFormat,
-                  bool mipmaps = false);
-
+        Texture2D(const TextureInfo& info);
         ~Texture2D();
 
         void Bind() const;
@@ -44,31 +44,23 @@ namespace sgl
         static void UnBind();
         static void UnBindUnit(uint32_t unit);
 
-        /** @brief Immutable data storage */
-        void SetImage(uint32_t width,
-                      uint32_t height,
-                      const unsigned char* data,
-                      uint32_t format,
-                      uint32_t imageFormat,
-                      bool mipmaps = false);
-        
-        void UpdateData(const unsigned char* data) const;
+        void SetDataImmutable(const TextureInfo& info);
+        void UpdateData(const void* data) const;
 
         void SetWrap(uint32_t wrap_s, 
                      uint32_t wrap_t);
-
         void SetFiltering(uint32_t min_f,
                           uint32_t mag_f);
         void SetBorderColor(const glm::vec4& kColor) const;
 
     private:
         void Init(uint32_t width, uint32_t height, uint32_t format,
-                  uint32_t imageFormat, bool mipmaps);
+                  uint32_t imageFormat, uint32_t imageDataType, bool mipmaps);
 
         void CreateTexture();
         void DeleteTexture();
 
-        void SetDataImmutable(const unsigned char* data) const;
+        void CreateStorageImmutable() const;
 
         void GenMipMaps();
 
@@ -83,6 +75,7 @@ namespace sgl
 
         uint32_t m_Format{ 0 };
         uint32_t m_ImageFormat{ 0 };
+        uint32_t m_ImageDataType{ 0 };
 
         uint32_t m_Wrap_S{ 0 };
         uint32_t m_Wrap_T{ 0 };
