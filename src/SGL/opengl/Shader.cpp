@@ -114,7 +114,7 @@ namespace sgl
         glUniform1i(kLocation, value);
     }
 
-    void Shader::SetIntArray(const std::string& name, int* values,
+    void Shader::SetIntArray(const std::string& name, const int* values,
                              uint32_t count) const
     {
         const GLint kLocation = glGetUniformLocation(m_ID, name.c_str());
@@ -125,6 +125,13 @@ namespace sgl
     {
         const GLint kLocation = glGetUniformLocation(m_ID, name.c_str());
         glUniform1f(kLocation, value);
+    }
+
+    void Shader::SetFloatArray(const std::string& name, const float* values,
+                             uint32_t count) const
+    {
+        const GLint kLocation = glGetUniformLocation(m_ID, name.c_str());
+        glUniform1fv(kLocation, count, values);
     }
 
     void Shader::SetFloat2(const std::string& name, const glm::vec2& value) const
@@ -139,10 +146,24 @@ namespace sgl
         glUniform3f(kLocation, value.x, value.y, value.z);
     }
 
+    void Shader::SetFloat3Array(const std::string& name, const glm::vec3* values,
+                             uint32_t count) const
+    {
+        const GLint kLocation = glGetUniformLocation(m_ID, name.c_str());
+        glUniform3fv(kLocation, count, &(values[0].x) );
+    }
+
     void Shader::SetFloat4(const std::string& name, const glm::vec4& value) const
     {
         const GLint kLocation = glGetUniformLocation(m_ID, name.c_str());
         glUniform4f(kLocation, value.x, value.y, value.z, value.w);
+    }
+
+    void Shader::SetFloat4Array(const std::string& name, const glm::vec4* values,
+                                uint32_t count) const
+    {
+        const GLint kLocation = glGetUniformLocation(m_ID, name.c_str());
+        glUniform4fv(kLocation, count, &(values[0].x) );
     }
 
     void Shader::SetMat3(const std::string& name, const glm::mat3& mat) const
