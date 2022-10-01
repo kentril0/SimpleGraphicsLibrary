@@ -133,7 +133,6 @@ namespace sgl
                 m_LastFrameTime = curTime;
 
                 this->Update(dt);
-
                 this->Render();
 
                 START_IMGUI_FRAME();
