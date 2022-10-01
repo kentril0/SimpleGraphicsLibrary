@@ -120,8 +120,10 @@ void TexturedQuad::CreateTextures()
     SGL_ASSERT_MSG(data.Loaded(), "Texture loaded: {}", bool(data));
 
     // TODO format based on component count and type
-    m_Texture = sgl::Texture2D::Create(data.width, data.height, data.data,
-                                       GL_RGBA8, GL_RGBA, true);
+    m_Texture = sgl::Texture2D::Create({
+        data.width, data.height, data.data,
+        GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, true
+    });
 }
 
 void TexturedQuad::SetupPreRenderStates()
