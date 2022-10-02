@@ -27,6 +27,8 @@
 #include "SGL/opengl/Texture2D.h"
 #include "SGL/opengl/CubeMapTexture.h"
 
+#include "SGL/opengl/UniformBuffer.h"
+
 
 namespace sgl
 {
