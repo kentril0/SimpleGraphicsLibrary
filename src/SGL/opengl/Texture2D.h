@@ -54,7 +54,7 @@ namespace sgl
         void SetBorderColor(const glm::vec4& kColor) const;
 
     private:
-        void Init(uint32_t width, uint32_t height, uint32_t format,
+        void Init(int32_t width, int32_t height, uint32_t format,
                   uint32_t imageFormat, uint32_t imageDataType, bool mipmaps);
 
         void CreateTexture();
@@ -65,6 +65,7 @@ namespace sgl
         void GenMipMaps();
 
         void ApplyFiltering() const;
+        void ApplyWrapping() const;
 
     private:
         uint32_t m_ID{ 0 };

@@ -36,10 +36,8 @@ namespace sgl
     }
 
     Texture2D::Texture2D(const TextureInfo& info)
+        : Texture2D()
     {
-        SGL_FUNCTION();
-
-        CreateTexture();
         SetDataImmutable(info);
     }
 
@@ -61,6 +59,7 @@ namespace sgl
 
         GenMipMaps();
         ApplyFiltering();
+        ApplyWrapping();
     }
 
     void Texture2D::Bind() const
@@ -97,13 +96,13 @@ namespace sgl
         m_ID = 0;
     }
 
-    void Texture2D::Init(uint32_t width, uint32_t height, uint32_t format,
+    void Texture2D::Init(int32_t width, int32_t height, uint32_t format,
                          uint32_t imageFormat, uint32_t imageDataType,
                          bool mipmaps)
     {
         SGL_FUNCTION();
-        m_Width = width;
-        m_Height = height;
+        m_Width = static_cast<uint32_t>(width);
+        m_Height = static_cast<uint32_t>(height);
 
         m_Format = format;
         m_ImageFormat = imageFormat;
@@ -114,7 +113,9 @@ namespace sgl
 
         if (mipmaps)
         {
-            m_MipLevels = std::log2(width);
+            m_MipLevels = static_cast<uint32_t>(
+                std::floor( std::log2( std::max(width, height) ) )
+            ) + 1;
             m_FilterMin = Texture2D::DEFAULT_MIN_FILTER_MIPMAP;
         }
         else
@@ -130,7 +131,7 @@ namespace sgl
     {
         SGL_FUNCTION();
 
-        // Specify IMMUTABLE storage for all levels of a 2D array texture
+        // Specify IMMUTABLE storage for all levels of a 2D texture
         glTextureStorage2D(m_ID,
                            // number of texture levels
                            m_MipLevels,
@@ -146,7 +147,7 @@ namespace sgl
 
         glTextureSubImage2D(m_ID,               // texture id
                             0,                  // level
-                            // xoffset, yoffset in the texture array
+                            // xoffset, yoffset in the texture
                             0, 0,
                             // width, height of the subimage
                             m_Width, m_Height,
@@ -174,6 +175,13 @@ namespace sgl
         glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, m_FilterMin);
         glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, m_FilterMag);
     }
+
+    void Texture2D::ApplyWrapping() const
+    {
+        SGL_FUNCTION();
+        glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, m_Wrap_S);
+        glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, m_Wrap_T);
+    }
     
     void Texture2D::SetFiltering(uint32_t min_f, uint32_t mag_f)
     {
@@ -189,8 +197,8 @@ namespace sgl
         SGL_FUNCTION();
         m_Wrap_S = wrap_s;
         m_Wrap_T = wrap_t;
-        glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, wrap_s);
-        glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, wrap_t);
+
+        ApplyWrapping();
     }
 
     void Texture2D::SetBorderColor(const glm::vec4& kColor) const
