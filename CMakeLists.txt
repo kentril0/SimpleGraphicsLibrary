@@ -177,6 +177,7 @@ if(SGL_BUILD_STATIC)
         "${SGL_OPENGL_DIR}/Shader.cpp" 
         "${SGL_OPENGL_DIR}/Texture2D.cpp" 
         "${SGL_OPENGL_DIR}/CubeMapTexture.cpp" 
+        "${SGL_OPENGL_DIR}/Texture2DArray.cpp"
         "${SGL_DIR}/SGL.cpp"
     )
 
