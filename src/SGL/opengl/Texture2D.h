@@ -32,10 +32,17 @@ namespace sgl
         static const uint32_t DEFAULT_MIN_FILTER, 
                               DEFAULT_MIN_FILTER_MIPMAP, DEFAULT_MAG_FILTER;
     public:
+        /**
+         * @brief Creates a texture handle for subsequent storage creation
+         * and occupation.
+         */
         Texture2D();
 
-        /** @brief Immutable data storage */
+        /**
+         * @brief Creates immutable data storage.
+         */
         Texture2D(const TextureInfo& info);
+
         ~Texture2D();
 
         void Bind() const;
@@ -44,14 +51,32 @@ namespace sgl
         static void UnBind();
         static void UnBindUnit(uint32_t unit);
 
+        /** 
+         * @brief Creates immutable data storage with set properties and data.
+         * Applies default filtering and wrapping.
+         */
         void SetDataImmutable(const TextureInfo& info);
-        void UpdateData(const void* data) const;
+
+        /** 
+         * @brief Updates the data of the created immutable data storage,
+         * the data passed must conform to the properties of the storage.
+         */
+        void UpdateDataImmutable(const void* data) const;
+
+        /**
+         * @brief Creates mutable data storage with set properties and data.
+         * Use this when texture dimensions might change.
+         * Applies default filtering and wrapping.
+         */
+        void SetData(const TextureInfo& info);
 
         void SetWrap(uint32_t wrap_s, 
                      uint32_t wrap_t);
         void SetFiltering(uint32_t min_f,
                           uint32_t mag_f);
         void SetBorderColor(const glm::vec4& kColor) const;
+
+        uint32_t GetID() const { return m_ID; }
 
     private:
         void Init(int32_t width, int32_t height, uint32_t format,

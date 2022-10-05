@@ -55,11 +55,38 @@ namespace sgl
              info.format, info.imageFormat, info.imageDataType, info.mipmaps);
 
         CreateStorageImmutable();
-        UpdateData(info.data);
+        UpdateDataImmutable(info.data);
 
         GenMipMaps();
         ApplyFiltering();
         ApplyWrapping();
+    }
+
+    void Texture2D::SetData(const TextureInfo& info)
+    {
+        SGL_FUNCTION();
+
+        Init(info.width, info.height,
+             info.format, info.imageFormat, info.imageDataType, info.mipmaps);
+
+        // glTexImage2D has only non-DSA variant, as per 4.5
+
+        this->Bind();
+
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,                 // Level
+                     m_Format,          // Sized internal format
+                     m_Width, m_Height, // Dimensions
+                     0,                 // Border
+                     m_ImageFormat,     // Image format
+                     m_ImageDataType,   // Image datatype
+                     info.data);        // Pointer to the image data
+
+        GenMipMaps(); 
+        ApplyFiltering();
+        ApplyWrapping();
+
+        this->UnBind();
     }
 
     void Texture2D::Bind() const
@@ -141,7 +168,7 @@ namespace sgl
                            m_Width, m_Height);
     }
 
-    void Texture2D::UpdateData(const void* data) const
+    void Texture2D::UpdateDataImmutable(const void* data) const
     {
         SGL_FUNCTION();
 

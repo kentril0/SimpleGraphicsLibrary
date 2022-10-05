@@ -42,8 +42,6 @@ namespace sgl
         void SetDataImmutable(const TextureInfo& info,
                               const std::vector<const void*>& data);
 
-        void UpdateData(const std::vector<const void*>& data) const;
-        
         void Bind() const;
         static void UnBind();
 
@@ -61,6 +59,7 @@ namespace sgl
         void DeleteTexture();
 
         void CreateStorageImmutable(const size_t kTextureCount) const;
+        void UpdateData(const std::vector<const void*>& data) const;
         void GenMipMaps();
 
         void ApplyFiltering() const;
