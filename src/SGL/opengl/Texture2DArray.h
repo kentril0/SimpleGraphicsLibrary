@@ -3,80 +3,53 @@
  * (http://opensource.org/licenses/MIT)
  */
 
-#ifndef SGL_OPENGL_TEXTURE_2D_H_
-#define SGL_OPENGL_TEXTURE_2D_H_
+#ifndef SGL_OPENGL_TEXTURE_2D_ARRAY_H_
+#define SGL_OPENGL_TEXTURE_2D_ARRAY_H_
 
+#include <vector>
 #include <memory>
 
 
 namespace sgl
 {
-    class Texture2D
+    class Texture2DArray
     {
     public:
         struct TextureInfo 
         {
             int32_t width;
             int32_t height;
-            const void* data;
             uint32_t format;        ///< Sized texture format, e.g. GL_RGBA8
             uint32_t imageFormat;   ///< Image data format, e.g. GL_RGBA
             uint32_t imageDataType; ///< Image data type, e.g. GL_UNSIGNED_BYTE
             bool mipmaps;
         };
 
-        static std::shared_ptr<Texture2D> Create();
-        static std::shared_ptr<Texture2D> Create(const TextureInfo& info);
-
         static const uint32_t DEFAULT_WRAP_S, DEFAULT_WRAP_T;
         static const uint32_t DEFAULT_MIN_FILTER, 
                               DEFAULT_MIN_FILTER_MIPMAP, DEFAULT_MAG_FILTER;
     public:
-        /**
-         * @brief Creates a texture handle for subsequent storage creation
-         * and occupation.
-         */
-        Texture2D();
+        Texture2DArray();
+        Texture2DArray(const TextureInfo& info,
+                       const std::vector<const void*>& data);
+        ~Texture2DArray();
 
-        /**
-         * @brief Creates immutable data storage.
+        /** @brief Creates immutable data storage for all the textures
+         * with the same properties, can be called only once.
+         * @param info Properties of the textures (have the same properties)
+         * @param data Image data of each texture
          */
-        Texture2D(const TextureInfo& info);
-
-        ~Texture2D();
+        void SetDataImmutable(const TextureInfo& info,
+                              const std::vector<const void*>& data);
 
         void Bind() const;
-        void BindUnit(uint32_t unit) const;
-
         static void UnBind();
-        static void UnBindUnit(uint32_t unit);
-
-        /** 
-         * @brief Creates immutable data storage with set properties and data.
-         * Applies default filtering and wrapping.
-         */
-        void SetDataImmutable(const TextureInfo& info);
-
-        /** 
-         * @brief Updates the data of the created immutable data storage,
-         * the data passed must conform to the properties of the storage.
-         */
-        void UpdateDataImmutable(const void* data) const;
-
-        /**
-         * @brief Creates mutable data storage with set properties and data.
-         * Use this when texture dimensions might change.
-         * Applies default filtering and wrapping.
-         */
-        void SetData(const TextureInfo& info);
 
         void SetWrap(uint32_t wrap_s, 
                      uint32_t wrap_t);
         void SetFiltering(uint32_t min_f,
                           uint32_t mag_f);
         void SetBorderColor(const glm::vec4& kColor) const;
-
-        uint32_t GetID() const { return m_ID; }
 
     private:
         void Init(int32_t width, int32_t height, uint32_t format,
@@ -85,8 +58,8 @@ namespace sgl
         void CreateTexture();
         void DeleteTexture();
 
-        void CreateStorageImmutable() const;
-
+        void CreateStorageImmutable(const size_t kTextureCount) const;
+        void UpdateData(const std::vector<const void*>& data) const;
         void GenMipMaps();
 
         void ApplyFiltering() const;
@@ -112,4 +85,4 @@ namespace sgl
 } // namespace sgl
 
 
-#endif // SGL_OPENGL_TEXTURE_2D_H_
+#endif // SGL_OPENGL_TEXTURE_2D_ARRAY_H_
