@@ -3,8 +3,8 @@
  * (http://opensource.org/licenses/MIT)
  */
 
+#define SGL_PROFILE
 #include "ImGuiTriangle.h"
-#include <SGL/core/ProfileTimer.h>
 
 
 ImGuiTriangle::ImGuiTriangle()
@@ -116,6 +116,7 @@ void ImGuiTriangle::Update(float dt)
 void ImGuiTriangle::Render()
 {
     SGL_PROFILE_SCOPE();
+    SGL_PROFILE_SCOPE("mine");
 
     glClear(GL_COLOR_BUFFER_BIT);
 

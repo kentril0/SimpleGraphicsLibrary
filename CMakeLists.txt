@@ -166,6 +166,7 @@ if(SGL_BUILD_STATIC)
 
     set(SGL_SOURCES
         "${SGL_CORE_DIR}/Log.cpp" 
+        "${SGL_CORE_DIR}/Profile.cpp" 
         "${SGL_CORE_DIR}/Utils.cpp" 
         "${SGL_CORE_DIR}/Window.cpp" 
         "${SGL_CORE_DIR}/Application.cpp" 
