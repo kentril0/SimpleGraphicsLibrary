@@ -3,7 +3,6 @@
  * (http://opensource.org/licenses/MIT)
  */
 
-#define SGL_PROFILE
 #include "ImGuiTriangle.h"
 
 

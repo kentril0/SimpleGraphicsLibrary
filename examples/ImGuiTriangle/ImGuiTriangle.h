@@ -5,6 +5,7 @@
 
 #pragma once
 #define SGL_USE_IMGUI
+#define SGL_PROFILE
 #include <SGL/SGL.h>
 
 
