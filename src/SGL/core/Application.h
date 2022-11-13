@@ -6,15 +6,18 @@
 #ifndef SGL_CORE_APPLICATION_H_
 #define SGL_CORE_APPLICATION_H_
 
+// TODO optionally define the following macros before including this header file:
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// * SGL_USE_IMGUI to use ImGui abstraction
+// * SGL_PROFILE to enable recording profiling data
+
 #include <memory> 
 #include <vector> 
 
 #include "SGL/core/Window.h"
 #include "SGL/core/Timer.h"
 #include "SGL/core/Timestep.h"
-#include "SGL/core/ProfileTimer.h"
-
-// Define SGL_USE_IMGUI macro to use ImGui
+#include "SGL/core/Profile.h"
 
 #ifdef SGL_USE_IMGUI
     #include <imgui/imgui.h>
@@ -35,24 +38,6 @@
     #define START_IMGUI_FRAME()
     #define RENDER_IMGUI_FRAME()
 #endif
-
-
-// Profiling macros
-// use SGL_PROFILE_SCOPE() , or
-// use SGL_PROFILE_SCOPE("your description") 
-
-#define SGL_PSCOPE1(name) sgl::ProfileTimer timer##__LINE__( \
-    name, \
-    [&](sgl::ProfileRecord result) { m_ProfileResults.push_back(result); })
-
-#define SGL_PSCOPE0() sgl::ProfileTimer timer1##__LINE__( \
-    __func__, \
-    [&](sgl::ProfileRecord result) { m_ProfileResults.push_back(result); })
-
-#define SGL_EXPAND_PSCOPE(_0,_1,fname, ...) fname
-
-#define SGL_PROFILE_SCOPE(...) \
-    SGL_EXPAND_PSCOPE(_0, ##__VA_ARGS__, SGL_PSCOPE1, SGL_PSCOPE0)(__VA_ARGS__)
 
 
 namespace sgl
@@ -89,34 +74,23 @@ namespace sgl
     #endif
     
     protected:
+        Timer m_StartTimer;                 ///< Time elapsed after "Start()"
+
         // TODO statically shared among more apps?
         std::unique_ptr<Window> m_Window;
     
-        Timer m_StartTimer;    ///< Time elapsed after "Start()"
-        std::vector<ProfileRecord> m_ProfileResults;
+        float m_LastFrameTime{ 0.0 };
+
+    #ifdef SGL_USE_IMGUI
+        // Status window: shows FPS, frametimes and recorded profiling data
+        bool m_ShowStatusWindow{ true };    ///< True to show ImGui status window
+    #endif
+
+    // =========================================================================
+    // Application internal stuff
 
     private:
-    #ifndef SGL_USE_IMGUI
-        void CreateImGuiContext() {}
-    #else
-        /**
-         * Creates ImGui Context AFTER glfw has been initialized, that is
-         *  after the window has been created
-         */
-        void CreateImGuiContext() const
-        {
-            SGL_FUNCTION();
-            IMGUI_CHECKVERSION();
-            ImGui::CreateContext();
-            ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-            ImGui::StyleColorsDark();
-            //ImGui::StyleColorsLight();
-
-            ImGui_ImplGlfw_InitForOpenGL(m_Window->GetGLFWWindow(), true);
-            ImGui_ImplOpenGL3_Init(SGL_GLSL_VERSION_STR);
-        }
-    #endif
         void Init()
         {
             m_StartTimer.Start();
@@ -135,37 +109,85 @@ namespace sgl
                 this->Update(dt);
                 this->Render();
 
+            #ifdef SGL_USE_IMGUI
                 START_IMGUI_FRAME();
                     this->OnImGuiRender();
-                    ShowProfileResultsWindow();
+
+                    if (m_ShowStatusWindow)
+                        ShowStatusWindow();
                 RENDER_IMGUI_FRAME();
+            #endif
 
                 m_Window->Display();
                 m_Window->PollEvents();
             }
         }
 
-        #ifndef SGL_USE_IMGUI
-            void ShowProfileResultsWindow() { m_ProfileResults.clear(); }
-        #else
-            void ShowProfileResultsWindow()
+    #ifndef SGL_USE_IMGUI
+        void CreateImGuiContext() const {}
+        void ShowStatusWindow() {}
+    #else
+        /**
+         * Creates ImGui Context AFTER glfw has been initialized, that is
+         *  after the window has been created
+         */
+        void CreateImGuiContext() const
+        {
+            SGL_FUNCTION();
+            IMGUI_CHECKVERSION();
+            ImGui::CreateContext();
+            ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+            ImGui::StyleColorsDark();
+            //ImGui::StyleColorsLight();
+
+            ImGui_ImplGlfw_InitForOpenGL(m_Window->GetGLFWWindow(), true);
+            ImGui_ImplOpenGL3_Init(SGL_GLSL_VERSION_STR);
+        }
+
+        void ShowStatusWindow()
+        {
+            if ( !ImGui::Begin("Application Metrics", &m_ShowStatusWindow) )
             {
-                if (m_ProfileResults.size() == 0) { return; }
-                ImGui::Begin("Profiling Results");
-                for (const auto& result : m_ProfileResults)
-                {
-                    char label[64];
-                    strcpy(label, "%.3f ms ");
-                    strcat(label, result.name);
-                    ImGui::Text(label, result.duration);
-                }
-                m_ProfileResults.clear();
                 ImGui::End();
+                return;
             }
+
+            // Show frametime and FPS
+            const ImGuiIO& io = ImGui::GetIO();
+            const float kFrameTime = 1000.0f / io.Framerate;
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+                         kFrameTime, io.Framerate);
+            ImGui::NewLine();
+
+        #ifdef SGL_PROFILE
+            ShowProfileRecordsTable();
         #endif
 
-    private:
-        float m_LastFrameTime{ 0.0 };
+            ImGui::End();
+        }
+
+        void ShowProfileRecordsTable() const
+        {
+            ImGui::Text("Profiling data");
+            if ( ImGui::BeginTable("Profiling data", 2,
+                                    ImGuiTableFlags_Resizable |
+                                    ImGuiTableFlags_BordersOuter |
+                                    ImGuiTableFlags_BordersV) )
+            {
+                const auto& kRecords = sgl::Profile::GetRecordsFromLatest();
+                for (const auto& record : kRecords)
+                {
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%.3f ms", record.duration);
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%s::%s", record.fileName, record.name);
+                }
+                ImGui::EndTable();
+            }
+        }
+    #endif
     };
 
 } // namespace sgl
